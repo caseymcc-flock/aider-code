@@ -3,6 +3,7 @@ import { spawn, ChildProcessWithoutNullStreams } from 'child_process';
 
 export class AiderInterface {
     private process: ChildProcessWithoutNullStreams;
+    private outputChannel: vscode.OutputChannel;
     private workingDirectory: string = '';
 
     constructor(workingDirectory: string) {
