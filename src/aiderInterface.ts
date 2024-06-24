@@ -8,8 +8,15 @@ export class AiderInterface {
         this.terminal.sendText('aider');
         this.terminal.show();
         this.terminal.processId.then(pid => {
-            const pty = (vscode as any).window.createTerminalRenderer('Aider Terminal');
-            pty.onDidWriteData((data: string) => {
+            const pty = require('node-pty').spawn('sh', [], {
+                name: 'xterm-color',
+                cols: 80,
+                rows: 30,
+                cwd: process.env.HOME,
+                env: process.env
+            });
+
+            pty.on('data', (data: string) => {
                 this.handleTerminalOutput(data);
             });
         });
