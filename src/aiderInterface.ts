@@ -1,25 +1,26 @@
 import * as vscode from 'vscode';
+import { spawn, ChildProcessWithoutNullStreams } from 'child_process';
 
 export class AiderInterface {
-    private terminal: vscode.Terminal;
+    private process: ChildProcessWithoutNullStreams;
     private workingDirectory: string = '';
 
     constructor(workingDirectory: string) {
         this.workingDirectory = workingDirectory;
 
-        let terminalOptions: vscode.TerminalOptions =  {
-            'name': 'Aider Terminal',
-            'cwd': '/Users/username/Documents/aider-code',
-        };
+        this.process = spawn('aider', [], { cwd: this.workingDirectory });
 
-        if (process.platform === 'win32') {
-            terminalOptions['shellPath'] = 'cmd.exe';
-            terminalOptions['shellArgs'] = ['/k', 'cd ' + this.workingDirectory];
-        }
+        this.process.stdout.on('data', (data) => {
+            this.handleTerminalOutput(data.toString());
+        });
 
-        this.terminal = vscode.window.createTerminal('Aider Terminal');
-        this.terminal.sendText('aider');
-        this.terminal.show();
+        this.process.stderr.on('data', (data) => {
+            console.error(`stderr: ${data}`);
+        });
+
+        this.process.on('close', (code) => {
+            console.log(`child process exited with code ${code}`);
+        });
     }
 
     private handleTerminalOutput(data: string): void {
@@ -45,18 +46,18 @@ export class AiderInterface {
             'No'
         ).then(selection => {
             if (selection === 'Yes') {
-                this.terminal.sendText('y');
+                this.process.stdin.write('y\n');
             } else if (selection === 'No') {
-                this.terminal.sendText('n');
+                this.process.stdin.write('n\n');
             }
         });
     }
 
     public sendCommand(command: string): void {
-        this.terminal.sendText(command);
+        this.process.stdin.write(`${command}\n`);
     }
 
     public closeTerminal(): void {
-        this.terminal.dispose();
+        this.process.kill();
     }
 }
