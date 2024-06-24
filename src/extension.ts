@@ -2,7 +2,7 @@
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
 
-// This method is called when your extension is activated
+import { AiderInterface } from './aiderInterface';
 // Your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
 
@@ -10,10 +10,8 @@ export function activate(context: vscode.ExtensionContext) {
 	// This line of code will only be executed once when your extension is activated
 	console.log('Congratulations, your extension "aider-code" is now active!');
 
-	// Create a terminal and start the aider command
-	const terminal = vscode.window.createTerminal('Aider Terminal');
-	terminal.sendText('aider');
-	terminal.show();
+	// Create an instance of AiderInterface
+	const aiderInterface = new AiderInterface();
 	// Now provide the implementation of the command with registerCommand
 	// The commandId parameter must match the command field in package.json
 	const disposable = vscode.commands.registerCommand('aider-code.helloWorld', () => {
