@@ -2,24 +2,24 @@ import * as vscode from 'vscode';
 
 export class AiderInterface {
     private terminal: vscode.Terminal;
+    private workingDirectory: string = '';
 
-    constructor() {
+    constructor(workingDirectory: string) {
+        this.workingDirectory = workingDirectory;
+
+        let terminalOptions: vscode.TerminalOptions =  {
+            'name': 'Aider Terminal',
+            'cwd': '/Users/username/Documents/aider-code',
+        };
+
+        if (process.platform === 'win32') {
+            terminalOptions['shellPath'] = 'cmd.exe';
+            terminalOptions['shellArgs'] = ['/k', 'cd ' + this.workingDirectory];
+        }
+
         this.terminal = vscode.window.createTerminal('Aider Terminal');
         this.terminal.sendText('aider');
         this.terminal.show();
-        this.terminal.processId.then(pid => {
-            const pty = require('node-pty').spawn('sh', [], {
-                name: 'xterm-color',
-                cols: 80,
-                rows: 30,
-                cwd: process.env.HOME,
-                env: process.env
-            });
-
-            pty.on('data', (data: string) => {
-                this.handleTerminalOutput(data);
-            });
-        });
     }
 
     private handleTerminalOutput(data: string): void {
