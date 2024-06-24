@@ -11,8 +11,12 @@ export function activate(context: vscode.ExtensionContext) {
 	// This line of code will only be executed once when your extension is activated
 	console.log('Congratulations, your extension "aider-code" is now active!');
 
+	// Get the current working directory based on the project's current directory
+	const workspaceFolders = vscode.workspace.workspaceFolders;
+	const workingDirectory = workspaceFolders ? workspaceFolders[0].uri.fsPath : '';
+
 	// Create an instance of AiderInterface
-	const aiderInterface = new AiderInterface();
+	const aiderInterface = new AiderInterface(workingDirectory);
 
 	// Register the command to launch the Aider webview
 	const webviewDisposable = vscode.commands.registerCommand('aider-code.openAiderChat', () => {
