@@ -16,7 +16,10 @@
       {
         "command": "aider-code.helloWorld",
         "title": "Hello World"
-      }
+      },
+      {
+        "command": "aider-code.openAiderWebview",
+        "title": "Open Aider Webview"
     ]
   },
   "scripts": {
