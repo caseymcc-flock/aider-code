@@ -13,18 +13,6 @@ export class AiderInterface {
                 this.handleTerminalOutput(data);
             });
         });
-        this.terminal.processId.then(pid => {
-            const pty = (vscode as any).window.createTerminalRenderer('Aider Terminal');
-            pty.onDidWriteData((data: string) => {
-                this.handleTerminalOutput(data);
-            });
-        });
-        this.terminal.processId.then(pid => {
-            const pty = (vscode as any).window.createTerminalRenderer('Aider Terminal');
-            pty.onDidWriteData((data: string) => {
-                this.handleTerminalOutput(data);
-            });
-        });
     }
 
     private handleTerminalOutput(data: string): void {
