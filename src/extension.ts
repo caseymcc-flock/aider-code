@@ -3,6 +3,7 @@
 import * as vscode from 'vscode';
 
 import { AiderInterface } from './aiderInterface';
+import { AiderWebview } from './aiderWebview';
 // Your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
 
@@ -12,15 +13,12 @@ export function activate(context: vscode.ExtensionContext) {
 
 	// Create an instance of AiderInterface
 	const aiderInterface = new AiderInterface();
-	// Now provide the implementation of the command with registerCommand
-	// The commandId parameter must match the command field in package.json
-	const disposable = vscode.commands.registerCommand('aider-code.helloWorld', () => {
-		// The code you place here will be executed every time your command is executed
-		// Display a message box to the user
-		vscode.window.showInformationMessage('Hello World from aider-code!');
-	});
 
-	context.subscriptions.push(disposable);
+	// Register the command to launch the Aider webview
+	const webviewDisposable = vscode.commands.registerCommand('aider-code.openAiderChat', () => {
+		new AiderWebview(context, aiderInterface);
+	});
+	context.subscriptions.push(webviewDisposable);
 }
 
 // This method is called when your extension is deactivated
