@@ -18,8 +18,8 @@
         "title": "Hello World"
       },
       {
-        "command": "aider-code.openAiderWebview",
-        "title": "Open Aider Webview"
+        "command": "aider-code.openAiderChat",
+        "title": "Open Aider Chat"
       }
     ]
   },
