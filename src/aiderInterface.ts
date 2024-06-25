@@ -2,7 +2,7 @@ import * as vscode from 'vscode';
 import * as pty from 'node-pty';
 
 export class AiderInterface {
-    private process: pty.IPty;
+    private process!: pty.IPty;
     private outputChannel: vscode.OutputChannel;
     private workingDirectory: string = '';
 
