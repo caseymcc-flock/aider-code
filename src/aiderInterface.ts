@@ -11,7 +11,7 @@ export class AiderInterface {
 
         this.outputChannel = vscode.window.createOutputChannel('Aider Interface');                                                                           
         this.outputChannel.appendLine(`Starting in ${this.workingDirectory}...`);
-        this.process = spawn('aider', [], { cwd: this.workingDirectory });
+        this.process = spawn('aider', [], { cwd: this.workingDirectory, stdio: ['pipe', 'pipe', 'pipe'] });
 
         this.process.stdout.on('data', (data) => {
              this.handleTerminalOutput(data.toString());
