@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import * as pty from 'node-pty-prebuilt-multiarch';
+import * as pty from 'node-pty';
 
 export class AiderInterface {
     private process: pty.IPty;
