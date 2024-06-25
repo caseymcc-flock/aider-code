@@ -2,7 +2,7 @@ import * as vscode from 'vscode';
 import * as pty from 'node-pty';
 
 export class AiderInterface {
-    private process: ChildProcessWithoutNullStreams;
+    private process: pty.IPty;
     private outputChannel: vscode.OutputChannel;
     private workingDirectory: string = '';
 
@@ -11,20 +11,19 @@ export class AiderInterface {
 
         this.outputChannel = vscode.window.createOutputChannel('Aider Interface');                                                                           
         this.outputChannel.appendLine(`Starting in ${this.workingDirectory}...`);
-        this.process = spawn('aider', [], { cwd: this.workingDirectory, stdio: ['pipe', 'pipe', 'pipe'] });
-
-        this.process.stdout.on('data', (data) => {
-             this.handleTerminalOutput(data.toString());
+        
+        this.process = pty.spawn('aider', [], {
+            name: 'xterm-color',
+            cwd: this.workingDirectory,
+            env: process.env
         });
 
-        this.process.stderr.on('data', (data) => {
-            const errorOutput = data.toString();
-            this.outputChannel.appendLine(`Error: ${errorOutput}`);
-            console.error(`stderr: ${errorOutput}`);
+        this.process.onData((data) => {
+            this.handleTerminalOutput(data);
         });
 
-        this.process.on('close', (code) => {
-            console.log(`child process exited with code ${code}`);
+        this.process.onExit((exitCode) => {
+            console.log(`child process exited with code ${exitCode.exitCode}`);
         });
     }
 
@@ -62,7 +61,7 @@ export class AiderInterface {
 
     public sendCommand(command: string): void {
         this.outputChannel.appendLine(`Sent: ${command}`);
-        this.process.stdin.write(`${command}\n`);
+        this.process.write(`${command}\n`);  
     }
 
     public closeTerminal(): void {
