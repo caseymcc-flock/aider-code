@@ -15,7 +15,7 @@ export class AiderInterface {
         this.process = pty.spawn('aider', [], {
             name: 'xterm-color',
             cwd: this.workingDirectory,
-            env: process.env
+            env: process.env as { [key: string]: string }
         });
 
         this.process.onData((data) => {
