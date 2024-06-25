@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { spawn, ChildProcessWithoutNullStreams } from 'child_process';
+import * as pty from 'node-pty';
 
 export class AiderInterface {
     private process: ChildProcessWithoutNullStreams;
