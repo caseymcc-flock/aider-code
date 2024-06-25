@@ -12,19 +12,25 @@ export class AiderInterface {
         this.outputChannel = vscode.window.createOutputChannel('Aider Interface');                                                                           
         this.outputChannel.appendLine(`Starting in ${this.workingDirectory}...`);
         
-        this.process = pty.spawn('aider', [], {
-            name: 'xterm-256color',
-            cwd: this.workingDirectory,
-            env: { ...process.env, TERM: 'xterm-256color' } as { [key: string]: string }
-        });
+        try {
+            this.process = pty.spawn('aider', [], {
+                name: 'xterm-256color',
+                cwd: this.workingDirectory,
+                env: { ...process.env, TERM: 'xterm-256color' } as { [key: string]: string }
+            });
 
-        this.process.onData((data) => {
-            this.handleTerminalOutput(data);
-        });
+            this.process.onData((data) => {
+                this.handleTerminalOutput(data);
+            });
 
-        this.process.onExit((exitCode) => {
-            console.log(`child process exited with code ${exitCode.exitCode}`);
-        });
+            this.process.onExit((exitCode) => {
+                this.outputChannel.appendLine(`child process exited with code ${exitCode.exitCode}`);
+            });
+
+            this.outputChannel.appendLine('Process started successfully.');
+        } catch (error) {
+            this.outputChannel.appendLine(`Error starting process: ${error}`);
+        }
     }
 
     private handleTerminalOutput(data: string): void {
