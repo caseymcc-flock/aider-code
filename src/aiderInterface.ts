@@ -9,14 +9,18 @@ export class AiderInterface {
     constructor(workingDirectory: string) {
         this.workingDirectory = workingDirectory;
 
+        this.outputChannel = vscode.window.createOutputChannel('Aider Interface');                                                                           
+        this.outputChannel.appendLine(`Starting in ${this.workingDirectory}...`);
         this.process = spawn('aider', [], { cwd: this.workingDirectory });
 
         this.process.stdout.on('data', (data) => {
-            this.handleTerminalOutput(data.toString());
+             this.handleTerminalOutput(data.toString());
         });
 
         this.process.stderr.on('data', (data) => {
-            console.error(`stderr: ${data}`);
+            const errorOutput = data.toString();
+            this.outputChannel.appendLine(`Error: ${errorOutput}`);
+            console.error(`stderr: ${errorOutput}`);
         });
 
         this.process.on('close', (code) => {
@@ -31,6 +35,8 @@ export class AiderInterface {
                 handler: this.handleNoGitRepo.bind(this)
             }
         ];
+
+        this.outputChannel.appendLine(`Received: ${data}`);
 
         for (const { searchString, handler } of handlers) {
             if (data.includes(searchString)) {
@@ -47,18 +53,20 @@ export class AiderInterface {
             'No'
         ).then(selection => {
             if (selection === 'Yes') {
-                this.process.stdin.write('y\n');
+                this.sendCommand('y');
             } else if (selection === 'No') {
-                this.process.stdin.write('n\n');
+                this.sendCommand('n');
             }
         });
     }
 
     public sendCommand(command: string): void {
+        this.outputChannel.appendLine(`Sent: ${command}`);
         this.process.stdin.write(`${command}\n`);
     }
 
     public closeTerminal(): void {
+        this.outputChannel.appendLine('Process terminated.');
         this.process.kill();
     }
 }
