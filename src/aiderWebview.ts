@@ -38,6 +38,7 @@ export class AiderWebview {
             command: 'updateCommandHistory',
             text: text
         });
+    }
 
     private getHtmlContent(): string {
         return `
