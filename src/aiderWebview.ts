@@ -47,14 +47,6 @@ export class AiderWebview {
                     <div id="file-container" style="display: none; max-height: 100px; overflow-y: auto;">
                         <ul id="file-list" style="max-height: 5em; overflow-y: auto;"></ul>
                     </div>
-                    function toggleFiles() {
-                        const fileContainer = document.getElementById('file-container');
-                        if (fileContainer.style.display === 'none') {
-                            fileContainer.style.display = 'block';
-                        } else {
-                            fileContainer.style.display = 'none';
-                        }
-                    }
                 </div>
                 <div>
                     <h2>Command History</h2>
@@ -66,6 +58,14 @@ export class AiderWebview {
                     <button onclick="sendCommand()">Send</button>
                 </div>
                 <script>
+                    function toggleFiles() {
+                        const fileContainer = document.getElementById('file-container');
+                        if (fileContainer.style.display === 'none') {
+                            fileContainer.style.display = 'block';
+                        } else {
+                            fileContainer.style.display = 'none';
+                        }
+                    }
                     const vscode = acquireVsCodeApi();
 
                     function sendCommand() {
