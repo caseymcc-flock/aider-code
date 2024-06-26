@@ -40,26 +40,37 @@ export class AiderWebview {
                 <meta charset="UTF-8">
                 <meta name="viewport" content="width=device-width, initial-scale=1.0">
                 <title>Aider Webview</title>
+                <style>
+                    .collapsible {
+                        display: flex;
+                        align-items: center;
+                        padding: 5px 0;
+                    }
+                    .collapsible::before {
+                        content: "▼";
+                        padding-right: 5px;
+                        color: #fff;
+                    }
+                </style>
             </head>
             <body>
-                <div>
-                    <h2 onclick="toggleFiles()">Files</h2>
-                    <div id="file-container" style="display: none; max-height: 100px; overflow-y: auto;">
+                <div id="files" class="collapsible" onclick="toggleFiles()">Files
+                    <div id="files-container" style="display: none; max-height: 100px; overflow-y: auto;">
                         <ul id="file-list" style="max-height: 5em; overflow-y: auto;"></ul>
                     </div>
                 </div>
-                <div>
+                <div id="chat-view">
                     <h2>Command History</h2>
                     <ul id="command-history"></ul>
                 </div>
-                <div>
+                <div id="chat-input">
                     <h2>Send Command</h2>
                     <input type="text" id="command-input" />
                     <button onclick="sendCommand()">Send</button>
                 </div>
                 <script>
                     function toggleFiles() {
-                        const fileContainer = document.getElementById('file-container');
+                        const fileContainer = document.getElementById('files-container');
                         if (fileContainer.style.display === 'none') {
                             fileContainer.style.display = 'block';
                         } else {
