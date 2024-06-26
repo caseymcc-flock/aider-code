@@ -43,8 +43,18 @@ export class AiderWebview {
             </head>
             <body>
                 <div>
-                    <h2>Files</h2>
-                    <ul id="file-list"></ul>
+                    <h2 onclick="toggleFiles()">Files</h2>
+                    <div id="file-container" style="display: none; max-height: 100px; overflow-y: auto;">
+                        <ul id="file-list" style="max-height: 5em; overflow-y: auto;"></ul>
+                    </div>
+                    function toggleFiles() {
+                        const fileContainer = document.getElementById('file-container');
+                        if (fileContainer.style.display === 'none') {
+                            fileContainer.style.display = 'block';
+                        } else {
+                            fileContainer.style.display = 'none';
+                        }
+                    }
                 </div>
                 <div>
                     <h2>Command History</h2>
