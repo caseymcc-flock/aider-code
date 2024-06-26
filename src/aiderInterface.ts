@@ -13,7 +13,7 @@ export class AiderInterface {
         this.outputChannel.appendLine(`Starting in ${this.workingDirectory}...`);
         
         try {
-            this.process = pty.spawn('aider', [], {
+            this.process = pty.spawn('aider', ['--stdout', '--no-pretty'], {
                 name: 'xterm-256color',
                 cwd: this.workingDirectory,
                 env: { ...process.env, TERM: 'xterm-256color', COLORTERM: 'truecolor' } as { [key: string]: string }

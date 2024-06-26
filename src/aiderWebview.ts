@@ -79,11 +79,11 @@ export class AiderWebview {
                     </div>
                 </div>
                 <div id="chat-view" style="flex: 1; overflow-y: auto;">
-                    <h2>Command History</h2>
-                    <ul id="command-history"></ul>
+                    <div>Chat History</div>
+                    <ul id="chat-history"></ul>
                 </div>
                 <div id="chat-input" style="position: absolute; bottom: 0; width: 100%; padding: 10px; box-sizing: border-box; background: #1e1e1e;">
-                    <h2>Send Command</h2>
+                    <div>Send Command</div>
                     <input type="text" id="command-input" />
                     <button onclick="sendCommand()">Send</button>
                 </div>
