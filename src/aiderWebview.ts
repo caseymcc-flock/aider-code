@@ -51,6 +51,25 @@ export class AiderWebview {
                         padding-right: 5px;
                         color: #fff;
                     }
+                    #chat-view {
+                        flex: 1;
+                        overflow-y: auto;
+                    }
+                    #chat-input {
+                        display: flex;
+                        flex-direction: column;
+                        position: absolute;
+                        bottom: 0;
+                        width: 100%;
+                        padding: 10px;
+                        box-sizing: border-box;
+                        background: #1e1e1e;
+                    }
+                    #command-input {
+                        height: 4em;
+                        width: 100%;
+                        box-sizing: border-box;
+                    }
                 </style>
             </head>
             <body>
@@ -59,11 +78,11 @@ export class AiderWebview {
                         <ul id="file-list" style="max-height: 5em; overflow-y: auto;"></ul>
                     </div>
                 </div>
-                <div id="chat-view">
+                <div id="chat-view" style="flex: 1; overflow-y: auto;">
                     <h2>Command History</h2>
                     <ul id="command-history"></ul>
                 </div>
-                <div id="chat-input">
+                <div id="chat-input" style="position: absolute; bottom: 0; width: 100%; padding: 10px; box-sizing: border-box; background: #1e1e1e;">
                     <h2>Send Command</h2>
                     <input type="text" id="command-input" />
                     <button onclick="sendCommand()">Send</button>
