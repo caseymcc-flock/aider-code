@@ -30,7 +30,14 @@ export class AiderWebview {
             undefined,
             context.subscriptions
         );
+        this.aiderInterface.setWebview(this);
     }
+
+    public updateChatHistory(text: string): void {
+        this.panel.webview.postMessage({
+            command: 'updateCommandHistory',
+            text: text
+        });
 
     private getHtmlContent(): string {
         return `
