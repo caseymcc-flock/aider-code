@@ -47,7 +47,7 @@ export class AiderWebview {
                         padding: 5px 0;
                     }
                     .collapsible::before {
-                        content: "▼";
+                        content: "▶";
                         padding-right: 5px;
                         color: #fff;
                     }
@@ -92,7 +92,9 @@ export class AiderWebview {
                         const fileContainer = document.getElementById('files-container');
                         if (fileContainer.style.display === 'none') {
                             fileContainer.style.display = 'block';
+                            this.querySelector('.collapsible::before').textContent = "▼";
                         } else {
+                            this.querySelector('.collapsible::before').textContent = "▶";
                             fileContainer.style.display = 'none';
                         }
                     }
