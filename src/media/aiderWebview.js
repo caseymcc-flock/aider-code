@@ -18,6 +18,49 @@ function addMessageToChat(message, isUser = false) {
     chatHistory.scrollTop = chatHistory.scrollHeight;
 }
 
+function addPromptToChat(message) {
+    sendButton.disabled = true;
+
+    const messageElement = document.createElement('div');
+    const text = document.createElement('p');
+    const promptButtons = document.createElement('div');
+    const yesButton = document.createElement('button');
+    const noButton = document.createElement('button');
+
+    messageElement.className = 'aider-prompt';
+    text.className = 'prompt-text';
+    text.textContent = message;
+    promptButtons.className = 'prompt-buttons';
+    yesButton.className = 'vscode-button';
+    yesButton.innerHTML = '<span class="codicon codicon-check"></span>';
+    noButton.className = 'vscode-button';
+    noButton.innerHTML = '<span class="codicon codicon-close"></span>';
+
+    promptButtons.appendChild(yesButton);
+    promptButtons.appendChild(noButton);
+    messageElement.appendChild(text);
+    messageElement.appendChild(promptButtons);
+    chatHistory.appendChild(messageElement);
+
+    yesButton.addEventListener('click', () => {
+        vscode.postMessage({
+            command: 'promptUserResponse',
+            response: 'yes'
+        });
+        chatHistory.removeChild(messageElement);
+        sendButton.disabled = false;
+    });
+
+    noButton.addEventListener('click', () => {
+        vscode.postMessage({
+            command: 'promptUserResponse',
+            response: 'no'
+        });
+        chatHistory.removeChild(messageElement);
+        sendButton.disabled = false;
+    });
+}
+
 // Function to add a log entry to the debug view
 function addLogEntry(entry) {
     const logEntry = document.createElement('div');
@@ -73,10 +116,3 @@ window.addEventListener('message', event => {
             break;
     }
 });
-
-// Show the source of the webview in the debug log
-const webviewSource = `
-    <h3>Webview Source</h3>
-    <pre>${document.documentElement.outerHTML}</pre>
-`;
-addLogEntry(webviewSource);
