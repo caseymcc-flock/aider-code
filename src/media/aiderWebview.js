@@ -31,8 +31,10 @@ function addPromptToChat(message) {
     text.className = 'prompt-text';
     text.textContent = message;
     promptButtons.className = 'prompt-buttons';
+    yesButton.id = 'yes-button'; // Set ID for yes button
     yesButton.className = 'vscode-button';
     yesButton.innerHTML = '<span class="codicon codicon-check"></span>';
+    noButton.id = 'no-button'; // Set ID for no button
     noButton.className = 'vscode-button';
     noButton.innerHTML = '<span class="codicon codicon-close"></span>';
 
