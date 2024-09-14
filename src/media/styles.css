@@ -121,6 +121,7 @@ h1 {
     font-family: var(--vscode-editor-font-family);
     white-space: pre-wrap;
     word-wrap: break-word;
+    width: 100%; /* Ensure full width */
 }
 .hidden {
     display: none;
