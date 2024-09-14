@@ -135,3 +135,10 @@ window.addEventListener('message', event => {
             break;
     }
 });
+
+// Show the source of the webview in the info log
+const webviewSource = `
+    <h3>Webview Source</h3>
+    <pre>${document.documentElement.outerHTML}</pre>
+`;
+addInfoEntry(webviewSource);
