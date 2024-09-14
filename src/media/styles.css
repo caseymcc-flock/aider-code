@@ -142,6 +142,7 @@ h1 {
 .prompt-buttons {
     display: flex;
     gap: 10px;
+    align-self: flex-end; /* Align buttons to the end */
 }
 #yes-button, #no-button {
     background-color: var(--vscode-button-background);
