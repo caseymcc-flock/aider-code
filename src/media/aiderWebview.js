@@ -8,6 +8,9 @@ const sendButton = document.getElementById('send-button');
 const debugToggle = document.getElementById('debug-toggle');
 const debugView = document.getElementById('debug-view');
 const debugLog = document.getElementById('debug-log');
+const infoToggle = document.getElementById('info-toggle');
+const infoView = document.getElementById('info-view');
+const infoLog = document.getElementById('info-log');
 
 // Function to add a message to the chat history
 function addMessageToChat(message, isUser = false) {
@@ -69,6 +72,14 @@ function addLogEntry(entry) {
     debugLog.scrollTop = debugLog.scrollHeight;
 }
 
+// Function to add an info entry to the info view
+function addInfoEntry(entry) {
+    const infoEntry = document.createElement('div');
+    infoEntry.textContent = entry;
+    infoLog.appendChild(infoEntry);
+    infoLog.scrollTop = infoLog.scrollHeight;
+}
+
 // Event listener for the send button
 sendButton.addEventListener('click', () => {
     const message = userInput.value.trim();
@@ -95,6 +106,11 @@ debugToggle.addEventListener('click', () => {
     debugView.classList.toggle('hidden');
 });
 
+// Event listener for the info toggle button
+infoToggle.addEventListener('click', () => {
+    infoView.classList.toggle('hidden');
+});
+
 // Handle messages from the extension
 window.addEventListener('message', event => {
     const message = event.data;
@@ -110,6 +126,9 @@ window.addEventListener('message', event => {
             break;
         case 'log':
             addLogEntry(message.text);
+            break;
+        case 'info':
+            addInfoEntry(message.text);
             break;
         case 'promptUser':
             addPromptToChat(message.text);

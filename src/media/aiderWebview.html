@@ -13,6 +13,7 @@
                 <div class="logo"></div>
                 <h1>Aider</h1>
                 <button id="debug-toggle" class="debug-icon codicon codicon-bug">🐛</button>
+                <button id="info-toggle" class="debug-icon codicon codicon-info">ℹ️</button>
             </div>
             <div class="message vscode-input">
                 <p>Welcome to Aider. I'm here to help you with your coding tasks. You can start by asking a question or giving me a task.</p>
@@ -26,6 +27,10 @@
         <div id="debug-view" class="debug-view hidden">
             <h2>Debug Log</h2>
             <div id="debug-log"></div>
+        </div>
+        <div id="info-view" class="debug-view hidden">
+            <h2>Information</h2>
+            <div id="info-log"></div>
         </div>
     </div>
     <script src="${scriptUri}"></script>
