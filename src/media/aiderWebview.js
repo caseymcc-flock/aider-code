@@ -1,7 +1,5 @@
-// Get the VS Code API
 const vscode = acquireVsCodeApi();
 
-// DOM elements
 const chatHistory = document.getElementById('chat-history');
 const userInput = document.getElementById('user-input');
 const sendButton = document.getElementById('send-button');
@@ -9,14 +7,12 @@ const debugToggle = document.getElementById('debug-toggle');
 const debugView = document.getElementById('debug-view');
 const debugLog = document.getElementById('debug-log');
 
-// Function to add a message to the chat history
 function addMessageToChat(message, isUser = false) {
     const messageElement = document.createElement('div');
     messageElement.className = isUser ? 'user-message' : 'aider-response';
     messageElement.textContent = message;
     chatHistory.appendChild(messageElement);
 
-    // Create a divider
     const divider = document.createElement('hr');
     chatHistory.appendChild(divider);
 
@@ -35,18 +31,18 @@ function addAssistantMessageToChat(message, fileName, diff, changeCount) {
 
     const toggleIcon = document.createElement('span');
     toggleIcon.className = 'collapsible-icon';
-    toggleIcon.textContent = '▼'; // Down arrow icon for expanded state
+    toggleIcon.textContent = '▼';
     toggleIcon.style.cursor = 'pointer';
 
     const diffElement = document.createElement('pre');
     diffElement.className = 'code-diff';
-    diffElement.textContent = `\`\`\`diff\n${diff}\n\`\`\``; // Include diff in code fences
-    diffElement.style.display = 'block'; // Initially visible
+    diffElement.textContent = `\`\`\`diff\n${diff}\n\`\`\``;
+    diffElement.style.display = 'block';
 
     toggleIcon.addEventListener('click', () => {
         const isCollapsed = diffElement.style.display === 'none';
         diffElement.style.display = isCollapsed ? 'block' : 'none';
-        toggleIcon.textContent = isCollapsed ? '▼' : '▶'; // Change icon based on state
+        toggleIcon.textContent = isCollapsed ? '▼' : '▶';
     });
 
     messageElement.appendChild(messageContent);
@@ -55,7 +51,9 @@ function addAssistantMessageToChat(message, fileName, diff, changeCount) {
     messageElement.appendChild(diffElement);
     chatHistory.appendChild(messageElement);
 
-    // Create a divider
+    // Highlight the code in the diffElement
+    hljs.highlightBlock(diffElement);
+
     const divider = document.createElement('hr');
     chatHistory.appendChild(divider);
 
@@ -77,14 +75,13 @@ function addPromptToChat(message) {
     text.className = 'prompt-text';
     text.textContent = message;
     promptButtons.className = 'prompt-buttons';
-    yesButton.id = 'yes-button'; // Set ID for yes button
+    yesButton.id = 'yes-button';
     yesButton.className = 'vscode-button';
-    yesButton.innerHTML = '<span class="codicon codicon-check"></span>'; // Codicon for check
-    noButton.id = 'no-button'; // Set ID for no button
+    yesButton.innerHTML = '<span class="codicon codicon-check"></span>';
+    noButton.id = 'no-button';
     noButton.className = 'vscode-button';
-    noButton.innerHTML = '<span class="codicon codicon-close"></span>'; // Codicon for close
+    noButton.innerHTML = '<span class="codicon codicon-close"></span>';
 
-    // Append text and buttons to the same container
     textArea.appendChild(text);
     textArea.appendChild(promptButtons);
     promptButtons.appendChild(yesButton);
@@ -111,7 +108,6 @@ function addPromptToChat(message) {
     });
 }
 
-// Function to add a log entry to the debug view
 function addLogEntry(entry) {
     const logEntry = document.createElement('div');
     logEntry.textContent = `[${new Date().toISOString()}] ${entry}`;
@@ -119,7 +115,6 @@ function addLogEntry(entry) {
     debugLog.scrollTop = debugLog.scrollHeight;
 }
 
-// Event listener for the send button
 sendButton.addEventListener('click', () => {
     const message = userInput.value.trim();
     if (message) {
@@ -132,7 +127,6 @@ sendButton.addEventListener('click', () => {
     }
 });
 
-// Event listener for the Enter key in the textarea
 userInput.addEventListener('keypress', (e) => {
     if (e.key === 'Enter' && !e.shiftKey) {
         e.preventDefault();
@@ -140,12 +134,10 @@ userInput.addEventListener('keypress', (e) => {
     }
 });
 
-// Event listener for the debug toggle button
 debugToggle.addEventListener('click', () => {
     debugView.classList.toggle('hidden');
 });
 
-// Handle messages from the extension
 window.addEventListener('message', event => {
     const message = event.data;
     switch (message.command) {
