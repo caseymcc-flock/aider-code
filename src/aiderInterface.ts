@@ -2,7 +2,7 @@ import * as vscode from 'vscode';
 import { exec, spawn } from 'child_process';
 import { AiderWebview } from './aiderWebview';
 import { Logger } from './logger';
-import { parse } from 'path';
+import * as json from 'json'; // Importing json module
 
 export class AiderInterface {
     private outputChannel: vscode.OutputChannel;
@@ -57,7 +57,7 @@ export class AiderInterface {
                 this.updateChatHistoryOutput(parsedData.value);
             } else if (parsedData.cmd === "assistant") {
                 const response = parsedData.value;
-                const unescapedResponse = response.replace(/\\\"/g, '\"'); // Unescape quotes
+                const unescapedResponse = json.loads(response); // Using json.loads to unescape
                 const [message, fileName, diff] = this.parseResponse(unescapedResponse);
 
                 Logger.log(`Assistant response:`);
@@ -91,7 +91,7 @@ export class AiderInterface {
 
     private parseResponse(response: string): [string, string, string] {
         const parts = response.split(/\n+/);
-        const message = parts[0].replace(/\\\"/g, '\"');
+        const message = parts[0];
         const fileName = parts[1] || '';
         const diff = parts.slice(2).join('\n').replace(/```diff\n/g, '').replace(/```/g, '').trim();
         return [message, fileName, diff];
