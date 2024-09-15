@@ -89,8 +89,9 @@ export class AiderInterface {
     }
 
     private parseResponse(response: string): [string, string, string] {
-        const parts = response.split(/\n+/);
-        const message = parts[0].replace(/\\n/g, '\n').replace(/\\\"/g, '\"');
+        const unescapedResponse = response.replace(/\\n/g, '\n');
+        const parts = unescapedResponse.split(/\n+/);
+        const message = parts[0].replace(/\\\"/g, '\"');
         const fileName = parts[1] || '';
         const diff = parts.slice(2).join('\n').replace(/```diff\n/g, '').replace(/```/g, '').trim();
         return [message, fileName, diff];
