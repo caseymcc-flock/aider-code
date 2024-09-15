@@ -40,7 +40,7 @@ function addAssistantMessageToChat(message, fileName, diff, changeCount) {
 
     const diffElement = document.createElement('pre');
     diffElement.className = 'code-diff';
-    diffElement.textContent = diff;
+    diffElement.textContent = `\`\`\`diff\n${diff}\n\`\`\``; // Include diff in code fences
     diffElement.style.display = 'block'; // Initially visible
 
     toggleIcon.addEventListener('click', () => {
