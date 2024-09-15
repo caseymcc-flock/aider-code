@@ -54,6 +54,7 @@ export class AiderWebview {
             if (e.webviewPanel.visible) {
                 this.restoreChatHistory();
                 this.restoreDebugLog();
+                this.aiderInterface.setWebview(this); // Reattach AiderInterface
             }
         });
     }
