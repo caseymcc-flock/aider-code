@@ -23,21 +23,34 @@ function addMessageToChat(message, isUser = false) {
     chatHistory.scrollTop = chatHistory.scrollHeight;
 }
 
-function addAssistantMessageToChat( message, fileName, diff ) {
+function addAssistantMessageToChat(message, fileName, diff) {
     const messageElement = document.createElement('div');
     messageElement.className = 'aider-response';
-    
+
     const messageContent = document.createElement('p');
     messageContent.textContent = message;
 
     const fileNameElement = document.createElement('p');
     fileNameElement.textContent = `File: ${fileName}`;
 
+    const toggleIcon = document.createElement('span');
+    toggleIcon.className = 'collapsible-icon';
+    toggleIcon.textContent = '▶'; // Right arrow icon for collapsed state
+    toggleIcon.style.cursor = 'pointer';
+
     const diffElement = document.createElement('pre');
     diffElement.className = 'code-diff';
     diffElement.textContent = diff;
+    diffElement.style.display = 'none'; // Initially hidden
+
+    toggleIcon.addEventListener('click', () => {
+        const isCollapsed = diffElement.style.display === 'none';
+        diffElement.style.display = isCollapsed ? 'block' : 'none';
+        toggleIcon.textContent = isCollapsed ? '▼' : '▶'; // Change icon based on state
+    });
 
     messageElement.appendChild(messageContent);
+    messageElement.appendChild(toggleIcon);
     messageElement.appendChild(fileNameElement);
     messageElement.appendChild(diffElement);
     chatHistory.appendChild(messageElement);
