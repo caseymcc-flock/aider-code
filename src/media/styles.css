@@ -54,9 +54,8 @@ h1 {
     padding: 16px;
     margin-bottom: 16px;
 }
-.user-message {
-    display: flex;
-    align-items: flex-start;
+.user-message, .aider-response {
+    background-color: transparent; /* Make background transparent to match parent */
 }
 .input-container {
     display: flex;
@@ -163,4 +162,8 @@ h1 {
 }
 #yes-button:hover, #no-button:hover {
     background-color: var(--vscode-button-hoverBackground);
+}
+hr {
+    border: 1px solid #555; /* Darker grey for the divider */
+    margin: 0; /* Remove default margin */
 }
