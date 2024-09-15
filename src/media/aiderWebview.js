@@ -23,7 +23,7 @@ function addMessageToChat(message, isUser = false) {
     chatHistory.scrollTop = chatHistory.scrollHeight;
 }
 
-function addAssistantMessageToChat(message, fileName, diff) {
+function addAssistantMessageToChat(message, fileName, diff, changeCount) {
     const messageElement = document.createElement('div');
     messageElement.className = 'aider-response';
 
@@ -31,17 +31,17 @@ function addAssistantMessageToChat(message, fileName, diff) {
     messageContent.textContent = message;
 
     const fileNameElement = document.createElement('p');
-    fileNameElement.textContent = `File: ${fileName}`;
+    fileNameElement.textContent = `File: ${fileName} (${changeCount} changes)`;
 
     const toggleIcon = document.createElement('span');
     toggleIcon.className = 'collapsible-icon';
-    toggleIcon.textContent = '▶'; // Right arrow icon for collapsed state
+    toggleIcon.textContent = '▼'; // Down arrow icon for expanded state
     toggleIcon.style.cursor = 'pointer';
 
     const diffElement = document.createElement('pre');
     diffElement.className = 'code-diff';
     diffElement.textContent = diff;
-    diffElement.style.display = 'none'; // Initially hidden
+    diffElement.style.display = 'block'; // Initially visible
 
     toggleIcon.addEventListener('click', () => {
         const isCollapsed = diffElement.style.display === 'none';
@@ -50,8 +50,8 @@ function addAssistantMessageToChat(message, fileName, diff) {
     });
 
     messageElement.appendChild(messageContent);
-    messageElement.appendChild(toggleIcon);
     messageElement.appendChild(fileNameElement);
+    messageElement.appendChild(toggleIcon);
     messageElement.appendChild(diffElement);
     chatHistory.appendChild(messageElement);
 
@@ -165,7 +165,7 @@ window.addEventListener('message', event => {
             addPromptToChat(message.text);
             break;
         case 'updateChatHistoryAssistant':
-            addAssistantMessageToChat(message.text, message.fileName, message.diff);
+            addAssistantMessageToChat(message.text, message.fileName, message.diff, message.changeCount);
             break;
     }
 });
