@@ -22,12 +22,14 @@ function addPromptToChat(message) {
     sendButton.disabled = true;
 
     const messageElement = document.createElement('div');
+    const textArea = document.createElement('div');
     const text = document.createElement('p');
     const promptButtons = document.createElement('div');
     const yesButton = document.createElement('button');
     const noButton = document.createElement('button');
 
     messageElement.className = 'aider-prompt';
+    textArea.className = 'prompt-text-area';
     text.className = 'prompt-text';
     text.textContent = message;
     promptButtons.className = 'prompt-buttons';
@@ -40,7 +42,8 @@ function addPromptToChat(message) {
 
     promptButtons.appendChild(yesButton);
     promptButtons.appendChild(noButton);
-    messageElement.appendChild(text);
+    textArea.appendChild(text);
+    messageElement.appendChild(textArea);
     messageElement.appendChild(promptButtons);
     chatHistory.appendChild(messageElement);
 
