@@ -35,6 +35,9 @@ function addAssistantMessageToChat(message, fileName, diff, changeCount) {
     const messageContent = document.createElement('p');
     messageContent.textContent = message;
 
+    const collapsibleFileElement = document.createElement('div');
+    collapsibleFileElement.className = 'collapsible-file';
+
     const toggleIcon = document.createElement('span');
     toggleIcon.className = 'collapsible-icon';
     toggleIcon.textContent = '▼';
@@ -54,8 +57,9 @@ function addAssistantMessageToChat(message, fileName, diff, changeCount) {
         toggleIcon.textContent = isCollapsed ? '▼' : '▶';
     });
 
-    messageElement.appendChild(toggleIcon); // Moved toggleIcon here
-    messageElement.appendChild(fileNameElement);
+    collapsibleFileElement.appendChild(toggleIcon);
+    collapsibleFileElement.appendChild(fileNameElement);
+    messageElement.appendChild(collapsibleFileElement);
     messageElement.appendChild(diffElement);
     chatHistory.appendChild(messageElement);
 
@@ -129,6 +133,7 @@ sendButton.addEventListener('click', () => {
         addMessageToChat(message, true);
         vscode.postMessage({
             command: 'sendCommand',
+            type: 'user',
             text: message
         });
         userInput.value = '';
