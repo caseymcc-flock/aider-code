@@ -23,6 +23,32 @@ function addMessageToChat(message, isUser = false) {
     chatHistory.scrollTop = chatHistory.scrollHeight;
 }
 
+function addAssistantMessageToChat({ message, fileName, diff }) {
+    const messageElement = document.createElement('div');
+    messageElement.className = 'aider-response';
+    
+    const messageContent = document.createElement('p');
+    messageContent.textContent = message;
+
+    const fileNameElement = document.createElement('p');
+    fileNameElement.textContent = `File: ${fileName}`;
+
+    const diffElement = document.createElement('pre');
+    diffElement.className = 'code-diff';
+    diffElement.textContent = diff;
+
+    messageElement.appendChild(messageContent);
+    messageElement.appendChild(fileNameElement);
+    messageElement.appendChild(diffElement);
+    chatHistory.appendChild(messageElement);
+
+    // Create a divider
+    const divider = document.createElement('hr');
+    chatHistory.appendChild(divider);
+
+    chatHistory.scrollTop = chatHistory.scrollHeight;
+}
+
 function addPromptToChat(message) {
     sendButton.disabled = true;
 
@@ -124,6 +150,9 @@ window.addEventListener('message', event => {
             break;
         case 'promptUser':
             addPromptToChat(message.text);
+            break;
+        case 'updateChatHistoryAssistant':
+            addAssistantMessageToChat(message);
             break;
     }
 });

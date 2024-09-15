@@ -53,13 +53,12 @@ export class AiderInterface {
         try {
             const parsedData = JSON.parse(data);
 
-            if (parsedData.cmd === "output" || parsedData.cmd === "assistant") {
+            if (parsedData.cmd === "output") {
+                this.updateChatHistoryOutput(parsedData.value);
+            } else if (parsedData.cmd === "assistant") {
                 const response = parsedData.value;
                 const [message, fileName, diff] = this.parseResponse(response);
-                if (this.webview) {
-                    this.webview.updateChatHistory(message);
-                    // You can also handle fileName and diff as needed
-                }
+                this.updateChatHistoryAssistant({ message, fileName, diff });
             }
             if (parsedData.cmd === "prompt") {
                 if (this.webview) {
@@ -68,6 +67,18 @@ export class AiderInterface {
             }
         } catch (error) {
             Logger.log(`Error parsing data: ${error}`);
+        }
+    }
+
+    private updateChatHistoryOutput(message: string): void {
+        if (this.webview) {
+            this.webview.updateChatHistory(message);
+        }
+    }
+
+    private updateChatHistoryAssistant({ message, fileName, diff }: { message: string; fileName: string; diff: string }): void {
+        if (this.webview) {
+            this.webview.updateChatHistoryAssistant({ message, fileName, diff });
         }
     }
 
