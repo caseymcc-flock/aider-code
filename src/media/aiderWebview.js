@@ -44,7 +44,11 @@ function addAssistantMessageToChat(message, fileName, diff, changeCount) {
     toggleIcon.style.cursor = 'pointer';
 
     const fileNameElement = document.createElement('p');
-    fileNameElement.textContent = `File: ${fileName} (${changeCount} changes)`;
+    
+    // Parse the diff to count additions and subtractions
+    const additions = (diff.match(/\+/g) || []).length;
+    const subtractions = (diff.match(/-/g) || []).length;
+    fileNameElement.textContent = `File: ${fileName} (${changeCount} changes, +${additions}, -${subtractions})`;
 
     const diffElement = document.createElement('pre');
     diffElement.className = 'code-diff';
