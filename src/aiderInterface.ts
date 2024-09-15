@@ -2,7 +2,6 @@ import * as vscode from 'vscode';
 import { exec, spawn } from 'child_process';
 import { AiderWebview } from './aiderWebview';
 import { Logger } from './logger';
-import * as json from 'json'; // Importing json module
 
 export class AiderInterface {
     private outputChannel: vscode.OutputChannel;
@@ -57,7 +56,7 @@ export class AiderInterface {
                 this.updateChatHistoryOutput(parsedData.value);
             } else if (parsedData.cmd === "assistant") {
                 const response = parsedData.value;
-                const unescapedResponse = json.loads(response); // Using json.loads to unescape
+                const unescapedResponse = JSON.parse(response); // Using JSON.parse to unescape
                 const [message, fileName, diff] = this.parseResponse(unescapedResponse);
 
                 Logger.log(`Assistant response:`);
