@@ -154,8 +154,9 @@ h1 {
     background-color: var(--vscode-button-background);
     color: var(--vscode-button-foreground);
     border: none;
-    padding: 4px; /* Adjusted padding */
-    height: 24px; /* Set height to match icon size */
+    padding: 8px 12px; /* Increased padding */
+    min-width: 80px; /* Set minimum width */
+    height: 32px; /* Set height to match icon size */
     border-radius: 4px;
     cursor: pointer;
 }
