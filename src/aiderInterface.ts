@@ -76,9 +76,9 @@ export class AiderInterface {
         }
     }
 
-    private updateChatHistoryAssistant({ message, fileName, diff }: { message: string; fileName: string; diff: string }): void {
+    private updateChatHistoryAssistant(info: { message: string; fileName: string; diff: string }): void {
         if (this.webview) {
-            this.webview.updateChatHistoryAssistant({ message, fileName, diff });
+            this.webview.updateChatHistoryAssistant(info);
         }
     }
 
