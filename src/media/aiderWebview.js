@@ -49,7 +49,7 @@ function addAssistantMessageToChat(message, fileName, diff, changeCount) {
     const diffElement = document.createElement('pre');
     diffElement.className = 'code-diff';
     diffElement.innerHTML = `<code>diff\n${diff}\n</code>`; // Updated to wrap in <pre><code>
-    diffElement.style.display = 'block';
+    diffElement.style.display = 'none'; // Start in a collapsed state
 
     toggleIcon.addEventListener('click', () => {
         const isCollapsed = diffElement.style.display === 'none';
@@ -133,7 +133,6 @@ sendButton.addEventListener('click', () => {
         addMessageToChat(message, true);
         vscode.postMessage({
             command: 'sendCommand',
-            type: 'user',
             text: message
         });
         userInput.value = '';
