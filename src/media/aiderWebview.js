@@ -23,7 +23,7 @@ function addMessageToChat(message, isUser = false) {
     chatHistory.scrollTop = chatHistory.scrollHeight;
 }
 
-function addAssistantMessageToChat({ message, fileName, diff }) {
+function addAssistantMessageToChat( message, fileName, diff ) {
     const messageElement = document.createElement('div');
     messageElement.className = 'aider-response';
     
@@ -152,7 +152,7 @@ window.addEventListener('message', event => {
             addPromptToChat(message.text);
             break;
         case 'updateChatHistoryAssistant':
-            addAssistantMessageToChat(message);
+            addAssistantMessageToChat(message.text, message.fileName, message.diff);
             break;
     }
 });
