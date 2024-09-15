@@ -7,6 +7,12 @@ const debugToggle = document.getElementById('debug-toggle');
 const debugView = document.getElementById('debug-view');
 const debugLog = document.getElementById('debug-log');
 
+function setHighlightJsTheme() {
+    const theme = vscode.getState().theme || 'default'; // Get the current theme from VSCode state
+    const highlightJsTheme = theme === 'dark' ? 'dark' : 'default'; // Set highlight.js theme based on VSCode theme
+    document.querySelector('link[href*="highlight.js"]').setAttribute('href', `https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.10.0/styles/${highlightJsTheme}.min.css`);
+}
+
 function addMessageToChat(message, isUser = false) {
     const messageElement = document.createElement('div');
     messageElement.className = isUser ? 'user-message' : 'aider-response';
@@ -52,7 +58,7 @@ function addAssistantMessageToChat(message, fileName, diff, changeCount) {
     chatHistory.appendChild(messageElement);
 
     // Highlight the code in the diffElement
-//    hljs.highlightElement(diffElement); // Updated to use highlightElement instead of highlightBlock
+    hljs.highlightElement(diffElement); // Updated to use highlightElement instead of highlightBlock
 
     const divider = document.createElement('hr');
     chatHistory.appendChild(divider);
@@ -161,3 +167,6 @@ window.addEventListener('message', event => {
             break;
     }
 });
+
+// Set the highlight.js theme based on the current VSCode theme
+setHighlightJsTheme();
