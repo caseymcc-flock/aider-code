@@ -58,6 +58,12 @@ export class AiderInterface {
             } else if (parsedData.cmd === "assistant") {
                 const response = parsedData.value;
                 const [message, fileName, diff] = this.parseResponse(response);
+
+                Logger.log(`Assistant response:`);
+                Logger.log(`  message: ${message}`);
+                Logger.log(`  fileName: ${fileName}`);
+                Logger.log(`  diff: ${diff}`);
+
                 this.updateChatHistoryAssistant({ message, fileName, diff });
             }
             if (parsedData.cmd === "prompt") {
