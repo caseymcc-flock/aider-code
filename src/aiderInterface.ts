@@ -57,7 +57,8 @@ export class AiderInterface {
                 this.updateChatHistoryOutput(parsedData.value);
             } else if (parsedData.cmd === "assistant") {
                 const response = parsedData.value;
-                const [message, fileName, diff] = this.parseResponse(response);
+                const unescapedResponse = response.replace(/\\\"/g, '\"'); // Unescape quotes
+                const [message, fileName, diff] = this.parseResponse(unescapedResponse);
 
                 Logger.log(`Assistant response:`);
                 Logger.log(`  message: ${message}`);
@@ -89,8 +90,7 @@ export class AiderInterface {
     }
 
     private parseResponse(response: string): [string, string, string] {
-        const unescapedResponse = response.replace(/\\n/g, '\n');
-        const parts = unescapedResponse.split(/\n+/);
+        const parts = response.split(/\n+/);
         const message = parts[0].replace(/\\\"/g, '\"');
         const fileName = parts[1] || '';
         const diff = parts.slice(2).join('\n').replace(/```diff\n/g, '').replace(/```/g, '').trim();
