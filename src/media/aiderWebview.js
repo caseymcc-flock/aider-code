@@ -15,6 +15,11 @@ function addMessageToChat(message, isUser = false) {
     messageElement.className = isUser ? 'user-message' : 'aider-response';
     messageElement.textContent = message;
     chatHistory.appendChild(messageElement);
+
+    // Create a divider
+    const divider = document.createElement('hr');
+    chatHistory.appendChild(divider);
+
     chatHistory.scrollTop = chatHistory.scrollHeight;
 }
 
