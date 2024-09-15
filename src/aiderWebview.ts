@@ -8,6 +8,7 @@ export class AiderWebview {
     private panel: vscode.WebviewPanel;
     private aiderInterface: AiderInterface;
     private commandHistory: string[] = [];
+    private chatHistory: string[] = []; // Store chat history
 
     constructor(context: vscode.ExtensionContext, aiderInterface: AiderInterface) {
         this.aiderInterface = aiderInterface;
@@ -46,6 +47,13 @@ export class AiderWebview {
         this.sendStoredLogs();
 
         this.aiderInterface.setWebview(this);
+
+        // Restore chat history when the panel is shown
+        this.panel.onDidChangeViewState(e => {
+            if (e.webviewPanel.visible) {
+                this.restoreChatHistory();
+            }
+        });
     }
 
     private sendStoredLogs() {
@@ -59,9 +67,19 @@ export class AiderWebview {
     }
 
     public updateChatHistory(text: string): void {
+        this.chatHistory.push(text); // Store chat history
         this.panel.webview.postMessage({
             command: 'updateChatHistory',
             text: text
+        });
+    }
+
+    public restoreChatHistory(): void {
+        this.chatHistory.forEach(text => {
+            this.panel.webview.postMessage({
+                command: 'updateChatHistory',
+                text: text
+            });
         });
     }
 
