@@ -40,11 +40,12 @@ function addPromptToChat(message) {
     noButton.className = 'vscode-button';
     noButton.innerHTML = '<span class="codicon codicon-close"></span>';
 
+    // Append text and buttons to the same container
+    textArea.appendChild(text);
+    textArea.appendChild(promptButtons);
     promptButtons.appendChild(yesButton);
     promptButtons.appendChild(noButton);
-    textArea.appendChild(text);
     messageElement.appendChild(textArea);
-    messageElement.appendChild(promptButtons);
     chatHistory.appendChild(messageElement);
 
     yesButton.addEventListener('click', () => {
