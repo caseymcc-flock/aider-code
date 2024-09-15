@@ -52,7 +52,7 @@ function addAssistantMessageToChat(message, fileName, diff, changeCount) {
     chatHistory.appendChild(messageElement);
 
     // Highlight the code in the diffElement
-    hljs.highlightBlock(diffElement);
+    hljs.highlightElement(diffElement); // Updated to use highlightElement instead of highlightBlock
 
     const divider = document.createElement('hr');
     chatHistory.appendChild(divider);
