@@ -10,7 +10,10 @@ const debugLog = document.getElementById('debug-log');
 function setHighlightJsTheme() {
     const theme = vscode.getState().theme || 'default'; // Get the current theme from VSCode state
     const highlightJsTheme = theme === 'dark' ? 'dark' : 'default'; // Set highlight.js theme based on VSCode theme
-    document.querySelector('link[href*="highlight.js"]').setAttribute('href', `https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.10.0/styles/${highlightJsTheme}.min.css`);
+    const linkElement = document.createElement('link');
+    linkElement.rel = 'stylesheet';
+    linkElement.href = `./media/highlight/styles/${highlightJsTheme}.min.css`; // Load from local styles directory
+    document.head.appendChild(linkElement);
 }
 
 function addMessageToChat(message, isUser = false) {
