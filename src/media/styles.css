@@ -111,6 +111,7 @@ h1 {
     border-left: 1px solid var(--vscode-sideBar-border);
     padding: 20px;
     overflow-y: auto;
+    flex-grow: 1; /* Allow debug view to cover remaining space */
 }
 .debug-view h2 {
     font-size: var(--vscode-font-size);
