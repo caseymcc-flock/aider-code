@@ -51,7 +51,9 @@ export class AiderInterface {
     }
 
     private handleTerminalOutput(data: string): void {
-        Logger.log(`Received: <${data}>`);
+        // Replace line feeds with a visible character sequence for logging
+        const formattedData = data.replace(/\n/g, '\\n');
+        Logger.log(`Received: <${formattedData}>`);
 
         // Split the incoming data by new lines and process each line
         const lines = data.split(/\r?\n/); // Updated to handle different line endings
