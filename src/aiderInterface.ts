@@ -50,7 +50,7 @@ export class AiderInterface {
         Logger.log(`Received: <${data}>`);
 
         // Split the incoming data by new lines and process each line
-        const lines = data.split('\n');
+        const lines = data.split(/\r?\n/); // Updated to handle different line endings
 
         for (const line of lines) {
             Logger.log(`Processing: ${line}`);
