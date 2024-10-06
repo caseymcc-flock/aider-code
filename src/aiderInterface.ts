@@ -52,11 +52,17 @@ export class AiderInterface {
 
     private handleTerminalOutput(data: string): void {
         // Replace line feeds with a visible character sequence for logging
-        const formattedData = data.replace(/\n/g, '\\n');
-        Logger.log(`Received: <${formattedData}>`);
+        Logger.log(`Received: <${data}>`);
 
-        // Split the incoming data by new lines and process each line
-        const lines = data.split(/\r?\n/); // Updated to handle different line endings
+        let lines: string[] = [];
+
+        try {
+            // Split the incoming data by new lines and process each line
+            lines = data.split(/\r?\n/); // Updated to handle different line endings
+        }
+        catch (error) {
+            Logger.log(`Error splitting data: ${error}`);
+        }
 
         Logger.log(`Lines: ${JSON.stringify(lines)}`); // Log the lines array
 
