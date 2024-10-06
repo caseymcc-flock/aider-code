@@ -53,6 +53,7 @@ export class AiderInterface {
             const parsedData = JSON.parse(data);
 
             if (parsedData.cmd === "output") {
+                Logger.log(`Output: ${parsedData.value}`);
                 this.updateChatHistoryOutput(parsedData.value);
             } else if (parsedData.cmd === "assistant") {
                 const response = parsedData.value;
@@ -67,6 +68,10 @@ export class AiderInterface {
                 this.updateChatHistoryAssistant({ message, fileName, diff });
             }
             if (parsedData.cmd === "prompt") {
+                Logger.log(`Prompt:`);
+                Logger.log(`  message: ${parsedData.value}`);
+                Logger.log(`  default: ${parsedData.default}`);
+                Logger.log(`  subject: ${parsedData.subject}`);
                 if (this.webview) {
                     this.webview.promptUser(parsedData.value, parsedData.default, parsedData.subject);
                 }
@@ -97,10 +102,7 @@ export class AiderInterface {
     }
 
     public promptUserResponse(response: string): void {
-        const jsonCommand = JSON.stringify({
-            cmd: "prompt_response",
-            value: response
-        });
+        this.sendCommand("prompt_response", response);
     }
 
     private handleNoGitRepo(): void {
@@ -110,17 +112,17 @@ export class AiderInterface {
             'No'
         ).then(selection => {
             if (selection === 'Yes') {
-                this.sendCommand('y');
+                this.sendCommand('prompt_response', 'y');
             } else if (selection === 'No') {
-                this.sendCommand('n');
+                this.sendCommand('prompt_response', 'n');
             }
         });
     }
 
-    public sendCommand(command: string): void {
+    public sendCommand(command: string, value: string): void {
         const jsonCommand = JSON.stringify({
-            cmd: "user",
-            value: command
+            cmd: command,
+            value: value
         });
 
         Logger.log(`Sent: ${jsonCommand}`);
