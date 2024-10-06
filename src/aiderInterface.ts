@@ -17,7 +17,8 @@ export class AiderInterface {
 
         try {
             this.process = spawn('aider', ['--commandio', '--no-stream'], {
-                cwd: this.workingDirectory
+                cwd: this.workingDirectory,
+                stdio: 'inherit' // Updated to inherit stdio from the parent process
             });
 
             this.process.stdout.on('data', (data: string) => {
