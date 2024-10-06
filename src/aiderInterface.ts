@@ -18,7 +18,6 @@ export class AiderInterface {
         try {
             this.process = spawn('aider', ['--commandio', '--no-stream'], {
                 cwd: this.workingDirectory,
-                stdio: 'inherit' // Updated to inherit stdio from the parent process
             });
 
             if (this.process) {
@@ -55,7 +54,9 @@ export class AiderInterface {
         Logger.log(`Received: <${data}>`);
 
         // Split the incoming data by new lines and process each line
-        const lines = data.split(/\r?\n/); // Updated to handle different line endings
+        const lines = data.split('\n'); // Updated to handle different line endings
+
+        Logger.log(`Lines: ${lines}`);
 
         for (const line of lines) {
             Logger.log(`Processing: ${line}`);
