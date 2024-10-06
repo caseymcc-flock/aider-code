@@ -60,6 +60,7 @@ export class AiderInterface {
             
             try {
                 const parsedData = JSON.parse(line);
+                Logger.log(`Parsed data: ${JSON.stringify(parsedData)}`); // Added logging for parsed data
 
                 if (parsedData.cmd === "output") {
                     Logger.log(`Output: ${parsedData.value}`);
