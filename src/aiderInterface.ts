@@ -54,7 +54,7 @@ export class AiderInterface {
         // Ensure data is a string
         if (typeof data !== 'string') {
             Logger.log(`Received non-string data: ${typeof data} ${data}`);
-            return; // Early return to avoid further processing
+            data = JSON.stringify(data); // Convert object to string
         }
 
         Logger.log(`Received: <${data}>`);
