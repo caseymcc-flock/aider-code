@@ -21,21 +21,25 @@ export class AiderInterface {
                 stdio: 'inherit' // Updated to inherit stdio from the parent process
             });
 
-            this.process.stdout.on('data', (data: string) => {
-                this.handleTerminalOutput(data);
-            });
+            if (this.process) {
+                this.process.stdout.on('data', (data: string) => {
+                    this.handleTerminalOutput(data);
+                });
 
-            this.process.stderr.on('data', (data: string) => {
-                this.handleTerminalOutput(data);
-            });
+                this.process.stderr.on('data', (data: string) => {
+                    this.handleTerminalOutput(data);
+                });
 
-            this.process.on('error', (error: any) => {
-                Logger.log(`Failed to start the process ${error}`);
-            });
+                this.process.on('error', (error: any) => {
+                    Logger.log(`Failed to start the process ${error}`);
+                });
 
-            this.process.on('close', (exitCode: any) => {
-                Logger.log(`child process exited with code ${exitCode}`);
-            });
+                this.process.on('close', (exitCode: any) => {
+                    Logger.log(`child process exited with code ${exitCode}`);
+                });
+            } else {
+                Logger.log(`Process could not be started.`);
+            }
         }
         catch (error) {
             Logger.log(`Error starting process: ${error}`);
