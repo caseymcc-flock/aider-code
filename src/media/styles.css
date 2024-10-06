@@ -61,6 +61,16 @@ h1 {
     display: flex;
     margin-top: 20px;
 }
+.collapsible-file {
+    display: flex;
+    align-items: center;
+}
+.collapsible-icon {
+    margin-right: 8px;
+}
+.collapsible-file.p {
+    margin: 0;
+}
 #user-input {
     flex-grow: 1;
     background-color: var(--vscode-input-background);

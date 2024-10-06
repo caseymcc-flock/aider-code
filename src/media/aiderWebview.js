@@ -86,7 +86,7 @@ function addAssistantMessageToChat(message, fileName, diff, changeCount) {
 }
 
 function addPromptToChat(message) {
-    if (lastMessageType !== 'prompt' && lastMessageType !== '') {
+    if (lastMessageType !== 'assistant' && lastMessageType !== '') {
         const divider = document.createElement('hr');
         chatHistory.appendChild(divider);
     }
@@ -119,7 +119,7 @@ function addPromptToChat(message) {
     messageElement.appendChild(textArea);
     chatHistory.appendChild(messageElement);
 
-    lastMessageType = 'prompt'; // Update last message type to prompt
+    lastMessageType = 'assistant';
 
     yesButton.addEventListener('click', () => {
         vscode.postMessage({
