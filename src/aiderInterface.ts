@@ -51,6 +51,10 @@ export class AiderInterface {
     }
 
     private handleTerminalOutput(data: any): void {
+        if (Buffer.isBuffer(data)) {
+            data = data.toString(); // Convert Buffer to string
+        }
+
         Logger.log(`Received: <${data}>`);
 
         // Split the incoming data by new lines and process each line
