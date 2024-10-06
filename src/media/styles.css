@@ -52,7 +52,7 @@ h1 {
     border: 1px solid var(--vscode-input-border);
     border-radius: 6px;
     padding: 16px;
-    margin-bottom: 16px;
+    margin-bottom: 8px; /* Reduced margin between messages */
 }
 .user-message, .aider-response {
     background-color: transparent; /* Make background transparent to match parent */
