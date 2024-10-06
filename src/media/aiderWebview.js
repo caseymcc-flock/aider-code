@@ -137,6 +137,7 @@ sendButton.addEventListener('click', () => {
         addMessageToChat(message, true);
         vscode.postMessage({
             command: 'sendCommand',
+            type: 'user',
             text: message
         });
         userInput.value = '';
