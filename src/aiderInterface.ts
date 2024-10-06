@@ -53,7 +53,7 @@ export class AiderInterface {
     private handleTerminalOutput(data: any): void {
         // Ensure data is a string
         if (typeof data !== 'string') {
-            Logger.log(`Received non-string data: ${data}`);
+            Logger.log(`Received non-string data: ${typeof data} ${data}`);
             return; // Early return to avoid further processing
         }
 
