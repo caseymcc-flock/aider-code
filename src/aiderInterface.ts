@@ -47,12 +47,17 @@ export class AiderInterface {
     }
 
     private handleTerminalOutput(data: string): void {
-        Logger.log(`Received: ${data}`);
+        Logger.log(`Received: <${data}>`);
 
         // Split the incoming data by new lines and process each line
         const lines = data.split('\n');
+
         for (const line of lines) {
-            if (line.trim() === '') continue; // Skip empty lines
+            Logger.log(`Processing: ${line}`);
+
+            if (line.trim() === '') 
+            {   continue; }// Skip empty lines
+            
             try {
                 const parsedData = JSON.parse(line);
 
