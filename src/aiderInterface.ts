@@ -50,19 +50,17 @@ export class AiderInterface {
         this.webview = webview;
     }
 
-    private handleTerminalOutput(data: string): void {
-        // Replace line feeds with a visible character sequence for logging
+    private handleTerminalOutput(data: any): void {
+        // Ensure data is a string
+        if (typeof data !== 'string') {
+            Logger.log(`Received non-string data: ${data}`);
+            return; // Early return to avoid further processing
+        }
+
         Logger.log(`Received: <${data}>`);
 
-        let lines: string[] = [];
-
-        try {
-            // Split the incoming data by new lines and process each line
-            lines = data.split(/\r?\n/); // Updated to handle different line endings
-        }
-        catch (error) {
-            Logger.log(`Error splitting data: ${error}`);
-        }
+        // Split the incoming data by new lines and process each line
+        const lines = data.split(/\r?\n/); // Updated to handle different line endings
 
         Logger.log(`Lines: ${JSON.stringify(lines)}`); // Log the lines array
 
