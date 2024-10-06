@@ -49,35 +49,40 @@ export class AiderInterface {
     private handleTerminalOutput(data: string): void {
         Logger.log(`Received: ${data}`);
 
-        try {
-            const parsedData = JSON.parse(data);
+        // Split the incoming data by new lines and process each line
+        const lines = data.split('\n');
+        for (const line of lines) {
+            if (line.trim() === '') continue; // Skip empty lines
+            try {
+                const parsedData = JSON.parse(line);
 
-            if (parsedData.cmd === "output") {
-                Logger.log(`Output: ${parsedData.value}`);
-                this.updateChatHistoryOutput(parsedData.value);
-            } else if (parsedData.cmd === "assistant") {
-                const response = parsedData.value;
-                const unescapedResponse = JSON.parse(response); // Using JSON.parse to unescape
-                const [message, fileName, diff] = this.parseResponse(unescapedResponse);
+                if (parsedData.cmd === "output") {
+                    Logger.log(`Output: ${parsedData.value}`);
+                    this.updateChatHistoryOutput(parsedData.value);
+                } else if (parsedData.cmd === "assistant") {
+                    const response = parsedData.value;
+                    const unescapedResponse = JSON.parse(response); // Using JSON.parse to unescape
+                    const [message, fileName, diff] = this.parseResponse(unescapedResponse);
 
-                Logger.log(`Assistant response:`);
-                Logger.log(`  message: ${message}`);
-                Logger.log(`  fileName: ${fileName}`);
-                Logger.log(`  diff: ${diff}`);
+                    Logger.log(`Assistant response:`);
+                    Logger.log(`  message: ${message}`);
+                    Logger.log(`  fileName: ${fileName}`);
+                    Logger.log(`  diff: ${diff}`);
 
-                this.updateChatHistoryAssistant({ message, fileName, diff });
-            }
-            if (parsedData.cmd === "prompt") {
-                Logger.log(`Prompt:`);
-                Logger.log(`  message: ${parsedData.value}`);
-                Logger.log(`  default: ${parsedData.default}`);
-                Logger.log(`  subject: ${parsedData.subject}`);
-                if (this.webview) {
-                    this.webview.promptUser(parsedData.value, parsedData.default, parsedData.subject);
+                    this.updateChatHistoryAssistant({ message, fileName, diff });
                 }
+                if (parsedData.cmd === "prompt") {
+                    Logger.log(`Prompt:`);
+                    Logger.log(`  message: ${parsedData.value}`);
+                    Logger.log(`  default: ${parsedData.default}`);
+                    Logger.log(`  subject: ${parsedData.subject}`);
+                    if (this.webview) {
+                        this.webview.promptUser(parsedData.value, parsedData.default, parsedData.subject);
+                    }
+                }
+            } catch (error) {
+                Logger.log(`Error parsing data: ${error}`);
             }
-        } catch (error) {
-            Logger.log(`Error parsing data: ${error}`);
         }
     }
 
