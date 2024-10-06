@@ -7,28 +7,38 @@ const debugToggle = document.getElementById('debug-toggle');
 const debugView = document.getElementById('debug-view');
 const debugLog = document.getElementById('debug-log');
 
+let lastMessageType = ''; // Track the last message type
+
 function setHighlightJsTheme() {
     const theme = vscode.getState().theme || 'default'; // Get the current theme from VSCode state
     const highlightJsTheme = theme === 'dark' ? 'dark' : 'default'; // Set highlight.js theme based on VSCode theme
     const linkElement = document.createElement('link');
     linkElement.rel = 'stylesheet';
     linkElement.href = `./media/highlight/styles/${highlightJsTheme}.min.css`; // Load from local styles directory
-    document.head.appendChild(linkElement);
 }
 
 function addMessageToChat(message, isUser = false) {
+    if (lastMessageType !== 'user' && lastMessageType !== '') {
+        const divider = document.createElement('hr');
+        chatHistory.appendChild(divider);
+    }
+
     const messageElement = document.createElement('div');
     messageElement.className = isUser ? 'user-message' : 'aider-response';
     messageElement.textContent = message;
     chatHistory.appendChild(messageElement);
 
-    const divider = document.createElement('hr');
-    chatHistory.appendChild(divider);
+    lastMessageType = 'user'; // Update last message type to user
 
     chatHistory.scrollTop = chatHistory.scrollHeight;
 }
 
 function addAssistantMessageToChat(message, fileName, diff, changeCount) {
+    if (lastMessageType !== 'assistant' && lastMessageType !== '') {
+        const divider = document.createElement('hr');
+        chatHistory.appendChild(divider);
+    }
+
     const messageElement = document.createElement('div');
     messageElement.className = 'aider-response';
 
@@ -67,16 +77,20 @@ function addAssistantMessageToChat(message, fileName, diff, changeCount) {
     messageElement.appendChild(diffElement);
     chatHistory.appendChild(messageElement);
 
+    lastMessageType = 'assistant'; // Update last message type to assistant
+
     // Highlight the code in the diffElement
     hljs.highlightElement(diffElement); // Updated to use highlightElement instead of highlightBlock
-
-    const divider = document.createElement('hr');
-    chatHistory.appendChild(divider);
 
     chatHistory.scrollTop = chatHistory.scrollHeight;
 }
 
 function addPromptToChat(message) {
+    if (lastMessageType !== 'prompt' && lastMessageType !== '') {
+        const divider = document.createElement('hr');
+        chatHistory.appendChild(divider);
+    }
+
     sendButton.disabled = true;
 
     const messageElement = document.createElement('div');
@@ -104,6 +118,8 @@ function addPromptToChat(message) {
     promptButtons.appendChild(noButton);
     messageElement.appendChild(textArea);
     chatHistory.appendChild(messageElement);
+
+    lastMessageType = 'prompt'; // Update last message type to prompt
 
     yesButton.addEventListener('click', () => {
         vscode.postMessage({
