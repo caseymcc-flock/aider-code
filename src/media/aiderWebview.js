@@ -8,6 +8,7 @@ const debugView = document.getElementById('debug-view');
 const debugLog = document.getElementById('debug-log');
 
 let lastMessageType = ''; // Track the last message type
+let currentMessageDiv; // Track the current message div
 
 function setHighlightJsTheme() {
     const theme = vscode.getState().theme || 'default'; // Get the current theme from VSCode state
@@ -18,32 +19,25 @@ function setHighlightJsTheme() {
 }
 
 function addMessageToChat(message, isUser = false) {
-    if (lastMessageType !== 'user' && lastMessageType !== '') {
-        const divider = document.createElement('hr');
-        chatHistory.appendChild(divider);
+    if (lastMessageType !== (isUser ? 'user' : 'assistant')) {
+        currentMessageDiv = document.createElement('div');
+        currentMessageDiv.className = isUser ? 'user-message-container' : 'assistant-message-container';
+        chatHistory.appendChild(currentMessageDiv);
     }
 
     const messageElement = document.createElement('div');
     messageElement.className = isUser ? 'user-message' : 'aider-response';
     messageElement.textContent = message;
-    chatHistory.appendChild(messageElement);
+    currentMessageDiv.appendChild(messageElement);
 
-    lastMessageType = 'user'; // Update last message type to user
+    lastMessageType = isUser ? 'user' : 'assistant'; // Update last message type
 
     chatHistory.scrollTop = chatHistory.scrollHeight;
 }
 
 function addAssistantMessageToChat(message, fileName, diff, changeCount) {
-    if (lastMessageType !== 'assistant' && lastMessageType !== '') {
-        const divider = document.createElement('hr');
-        chatHistory.appendChild(divider);
-    }
-
-    const messageElement = document.createElement('div');
-    messageElement.className = 'aider-response';
-
-    const messageContent = document.createElement('p');
-    messageContent.textContent = message;
+    addMessageToChat(message, false); // Use the same function to add assistant messages
+    const messageElement = currentMessageDiv.lastChild; // Get the last message element added
 
     const collapsibleFileElement = document.createElement('div');
     collapsibleFileElement.className = 'collapsible-file';
@@ -75,9 +69,6 @@ function addAssistantMessageToChat(message, fileName, diff, changeCount) {
     collapsibleFileElement.appendChild(fileNameElement);
     messageElement.appendChild(collapsibleFileElement);
     messageElement.appendChild(diffElement);
-    chatHistory.appendChild(messageElement);
-
-    lastMessageType = 'assistant'; // Update last message type to assistant
 
     // Highlight the code in the diffElement
     hljs.highlightElement(diffElement); // Updated to use highlightElement instead of highlightBlock
@@ -87,8 +78,9 @@ function addAssistantMessageToChat(message, fileName, diff, changeCount) {
 
 function addPromptToChat(message) {
     if (lastMessageType !== 'assistant' && lastMessageType !== '') {
-        const divider = document.createElement('hr');
-        chatHistory.appendChild(divider);
+        currentMessageDiv = document.createElement('div');
+        currentMessageDiv.className = 'assistant-message-container';
+        chatHistory.appendChild(currentMessageDiv);
     }
 
     sendButton.disabled = true;
@@ -117,7 +109,7 @@ function addPromptToChat(message) {
     promptButtons.appendChild(yesButton);
     promptButtons.appendChild(noButton);
     messageElement.appendChild(textArea);
-    chatHistory.appendChild(messageElement);
+    currentMessageDiv.appendChild(messageElement); // Append to the current message div
 
     lastMessageType = 'assistant';
 
