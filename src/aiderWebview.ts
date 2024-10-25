@@ -8,7 +8,6 @@ export class AiderWebview {
     private panel: vscode.WebviewPanel;
     private aiderInterface: AiderInterface;
     private commandHistory: string[] = [];
-    private chatHistory: string[] = []; // Store chat history
     private debugLogEntries: string[] = []; // Store debug log entries
 
     constructor(context: vscode.ExtensionContext, aiderInterface: AiderInterface) {
@@ -71,7 +70,6 @@ export class AiderWebview {
     }
 
     public updateChatHistory(text: string): void {
-        this.chatHistory.push(text); // Store chat history
         this.panel.webview.postMessage({
             command: 'updateChatHistory',
             text: text
@@ -79,11 +77,19 @@ export class AiderWebview {
     }
 
     public restoreChatHistory(): void {
-        this.chatHistory.forEach(text => {
-            this.panel.webview.postMessage({
-                command: 'updateChatHistory',
-                text: text
-            });
+        // Get chat history from AiderInterface and replay it
+        const history = this.aiderInterface.getChatHistory();
+        history.forEach(msg => {
+            if (msg.type === 'output') {
+                this.updateChatHistory(msg.message);
+            } else if (msg.type === 'assistant') {
+                this.updateChatHistoryAssistant({
+                    message: msg.message,
+                    fileName: msg.fileName || '',
+                    diff: msg.diff || ''
+                });
+            }
+            // Skip prompts that were already answered
         });
     }
 
