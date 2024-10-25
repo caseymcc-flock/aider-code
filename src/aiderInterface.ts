@@ -54,13 +54,10 @@ export class AiderInterface {
         if (Buffer.isBuffer(data)) {
             data = data.toString(); // Convert Buffer to string
         }
-
         Logger.log(`Received: <${data}>`);
 
         // Split the incoming data by new lines and process each line
         const lines = data.split(/\r?\n/); // Updated to handle different line endings
-
-        Logger.log(`Lines: ${JSON.stringify(lines)}`); // Log the lines array
 
         for (const line of lines) {
             Logger.log(`Processing: ${line}`);
@@ -76,16 +73,13 @@ export class AiderInterface {
                     Logger.log(`Output: ${parsedData.value}`);
                     this.updateChatHistoryOutput(parsedData.value);
                 } else if (parsedData.cmd === "assistant") {
-                    const response = parsedData.value;
-                    const unescapedResponse = JSON.parse(response); // Using JSON.parse to unescape
-                    const [message, fileName, diff] = this.parseResponse(unescapedResponse);
-
                     Logger.log(`Assistant response:`);
-                    Logger.log(`  message: ${message}`);
-                    Logger.log(`  fileName: ${fileName}`);
-                    Logger.log(`  diff: ${diff}`);
+                    Logger.log(`  type: ${parsedData.type}`);
+                    Logger.log(`  message: ${parsedData.value}`);
+                    Logger.log(`  filename: ${parsedData.filename}`);
+                    Logger.log(`  code: ${parsedData.code}`);
 
-                    this.updateChatHistoryAssistant({ message, fileName, diff });
+                    this.updateChatHistoryAssistant({ message: parsedData.value, fileName: parsedData.filename, diff: parsedData.code });
                 }
                 if (parsedData.cmd === "prompt") {
                     Logger.log(`Prompt:`);
