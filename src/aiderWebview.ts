@@ -5,6 +5,15 @@ import * as fs from 'fs';
 import * as path from 'path';
 import {Logger} from './logger';
 
+class PanelInfo
+{
+    public viewType: any;
+    public column: vscode.ViewColumn=vscode.ViewColumn.Two;
+
+    constructor() {
+    }
+}
+
 export class AiderWebview
 {
     private panel: vscode.WebviewPanel;
@@ -13,15 +22,19 @@ export class AiderWebview
     private markdownIt: MarkdownIt=new MarkdownIt();
     private reload: boolean=true;
 
+    
+
     constructor(context: vscode.ExtensionContext, aiderInterface: AiderInterface)
     {
         console.log('AiderWebview constructor');
 
         this.aiderInterface=aiderInterface;
+        const panelInfo = this.loadState(context);
+
         this.panel=vscode.window.createWebviewPanel(
             'aiderWebview',
             'Aider Webview',
-            vscode.ViewColumn.One,
+            panelInfo.column || vscode.ViewColumn.Two,
             {
                 enableScripts: true,
                 localResourceRoots: [vscode.Uri.joinPath(context.extensionUri, 'src', 'media')]
@@ -29,7 +42,14 @@ export class AiderWebview
         );
 
         this.panel.webview.html=this.getWebviewContent(context);
-        this.loadState();
+        
+        
+
+        // Send stored logs to the webview
+        this.sendStoredLogs();
+        this.restoreChatHistory();
+        this.restoreDebugLog();
+        this.aiderInterface.setWebview(this);
 
         this.panel.webview.onDidReceiveMessage(
             message =>
@@ -49,16 +69,6 @@ export class AiderWebview
             context.subscriptions
         );
 
-        // Set the panel for the Logger and send stored logs
-        Logger.setPanel(this.panel);
-
-        // Send stored logs to the webview
-        this.sendStoredLogs();
-
-        this.restoreChatHistory();
-        this.restoreDebugLog();
-        this.aiderInterface.setWebview(this);
-
         // Restore chat history and debug log when the panel is shown
         this.panel.onDidChangeViewState(e =>
         {
@@ -77,23 +87,25 @@ export class AiderWebview
 
         this.panel.onDidDispose(() => {
             this.reload=true;
-            this.storeState();
+            this.storeState(context);
         });
     }
 
-    private loadState(): void
+    private loadState(context: vscode.ExtensionContext): void
     {
-        const state = context.globalState.get('aiderWebviewState');
-        if (state && state.column) {
-            this.panel.reveal(state.column);
-        }
+        const panelInfo = context.workspaceState.get<{PanelInfo>('aiderWebviewPanel');
+
+        return panelInfo;
     }
-    private storeState(): void
+
+    private storeState(context: vscode.ExtensionContext): void
     {
-        const state = {
+        const panelInfo: PanelInfo = {
+            viewType: this.panel.viewType,
             column: this.panel.viewColumn
         };
-        context.globalState.update('aiderWebviewState', state);
+
+        context.workspaceState.update('aiderWebviewPanel', panelInfo);
 
     }
 
