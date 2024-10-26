@@ -226,6 +226,13 @@ function updateStreamMessage(message, final, html=false)
     }
 }
 
+function updateVersion(version) {
+    const versionText = document.getElementById('version-text');
+    if (versionText) {
+        versionText.textContent = version;
+    }
+}
+
 function addLogEntry(entry)
 {
     const logEntry = document.createElement('div');
@@ -292,6 +299,9 @@ window.addEventListener('message', event =>
             {   updateStreamMessage(message.text, message.final);}
             else
             {   updateStreamMessage(message.html, message.final, true);}
+            break;
+        case 'version':
+            updateVersion(message.version);
             break;
     }
 });

@@ -128,6 +128,15 @@ export class AiderInterface
                 {
                    this.handleAssistantStream(parsedData);
                 }
+                else if(parsedData.cmd==="version")
+                {
+                    if(this.webview) {
+                        this.webview.panel.webview.postMessage({
+                            command: 'version',
+                            version: parsedData.value
+                        });
+                    }
+                }
                 else if(parsedData.cmd==="prompt")
                 {
                     Logger.log(`Prompt:`);
