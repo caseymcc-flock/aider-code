@@ -29,6 +29,7 @@ export class AiderWebview
         );
 
         this.panel.webview.html=this.getWebviewContent(context);
+        this.loadState();
 
         this.panel.webview.onDidReceiveMessage(
             message =>
@@ -76,15 +77,23 @@ export class AiderWebview
 
         this.panel.onDidDispose(() => {
             this.reload=true;
+            this.storeState();
         });
     }
 
     private loadState(): void
     {
-
+        const state = context.globalState.get('aiderWebviewState');
+        if (state && state.column) {
+            this.panel.reveal(state.column);
+        }
     }
     private storeState(): void
     {
+        const state = {
+            column: this.panel.viewColumn
+        };
+        context.globalState.update('aiderWebviewState', state);
 
     }
 
