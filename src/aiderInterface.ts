@@ -134,6 +134,14 @@ export class AiderInterface
                     this.version=parsedData.value;
                     this.webview?.updateVersion(parsedData.value);
                 }
+                else if(parsedData.cmd==="model")
+                {
+                    this.webview?.updateModel(parsedData.value);
+                }
+                else if(parsedData.cmd==="weak_model")
+                {
+                    this.webview?.updateWeakModel(parsedData.value);
+                }
                 else if(parsedData.cmd==="prompt")
                 {
                     Logger.log(`Prompt:`);

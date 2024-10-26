@@ -228,9 +228,22 @@ function updateStreamMessage(message, final, html=false)
 
 function updateVersion(version) {
     const versionText = document.getElementById('version-text');
-
     if (versionText) {
-        versionText.textContent = version;
+        versionText.textContent = `v${version}`;
+    }
+}
+
+function updateModel(model) {
+    const modelText = document.getElementById('model-text');
+    if (modelText) {
+        modelText.textContent = `Model: ${model}`;
+    }
+}
+
+function updateWeakModel(model) {
+    const weakModelText = document.getElementById('weak-model-text');
+    if (weakModelText) {
+        weakModelText.textContent = `Weak: ${model}`;
     }
 }
 
@@ -303,6 +316,12 @@ window.addEventListener('message', event =>
             break;
         case 'version':
             updateVersion(message.version);
+            break;
+        case 'model':
+            updateModel(message.model);
+            break;
+        case 'weakModel':
+            updateWeakModel(message.model);
             break;
     }
 });

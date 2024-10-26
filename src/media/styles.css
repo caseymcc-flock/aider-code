@@ -39,7 +39,20 @@ body, html {
 .version-text {
     color: var(--vscode-descriptionForeground);
     font-size: 12px;
-    margin-left: 8px;
+    margin-left: 4px;
+    opacity: 0.8;
+}
+
+.model-info {
+    display: flex;
+    gap: 8px;
+    margin-left: auto;
+    margin-right: 12px;
+}
+
+.model-text {
+    color: var(--vscode-descriptionForeground);
+    font-size: 12px;
     opacity: 0.8;
 }
 h1 {

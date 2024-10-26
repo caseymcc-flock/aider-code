@@ -126,6 +126,22 @@ export class AiderWebview
         });
     }
 
+    public updateModel(model: string): void
+    {
+        this.panel.webview.postMessage({
+            command: 'model',
+            model: model
+        });
+    }
+
+    public updateWeakModel(model: string): void
+    {
+        this.panel.webview.postMessage({
+            command: 'weakModel',
+            model: model
+        });
+    }
+
     public updateStreamMessage(message: string, final: boolean): void
     {
         const htmlMessage=this.markdownIt.render(message);
