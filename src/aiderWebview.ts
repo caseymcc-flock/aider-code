@@ -5,13 +5,9 @@ import * as fs from 'fs';
 import * as path from 'path';
 import {Logger} from './logger';
 
-class PanelInfo
-{
-    public viewType: any;
-    public column: vscode.ViewColumn=vscode.ViewColumn.Two;
-
-    constructor() {
-    }
+interface PanelInfo {
+    viewType: string;
+    column: vscode.ViewColumn;
 }
 
 export class AiderWebview
@@ -91,11 +87,13 @@ export class AiderWebview
         });
     }
 
-    private loadState(context: vscode.ExtensionContext): void
+    private loadState(context: vscode.ExtensionContext): PanelInfo
     {
-        const panelInfo = context.workspaceState.get<{PanelInfo>('aiderWebviewPanel');
-
-        return panelInfo;
+        const panelInfo = context.workspaceState.get<PanelInfo>('aiderWebviewPanel');
+        return panelInfo || {
+            viewType: 'aiderWebview',
+            column: vscode.ViewColumn.Two
+        };
     }
 
     private storeState(context: vscode.ExtensionContext): void
