@@ -11,9 +11,12 @@ export class AiderWebview
     private aiderInterface: AiderInterface;
     private debugLogEntries: string[]=[]; // Store debug log entries
     private markdownIt: MarkdownIt=new MarkdownIt();
+    private reload: boolean=true;
 
     constructor(context: vscode.ExtensionContext, aiderInterface: AiderInterface)
     {
+        console.log('AiderWebview constructor');
+
         this.aiderInterface=aiderInterface;
         this.panel=vscode.window.createWebviewPanel(
             'aiderWebview',
@@ -51,18 +54,38 @@ export class AiderWebview
         // Send stored logs to the webview
         this.sendStoredLogs();
 
+        this.restoreChatHistory();
+        this.restoreDebugLog();
         this.aiderInterface.setWebview(this);
 
         // Restore chat history and debug log when the panel is shown
         this.panel.onDidChangeViewState(e =>
         {
+            console.log('AiderWebview state changed');
+
             if(e.webviewPanel.visible)
             {
-                this.restoreChatHistory();
-                this.restoreDebugLog();
-                this.aiderInterface.setWebview(this); // Reattach AiderInterface
+                if(this.reload)
+                {
+                    this.restoreChatHistory();
+                    this.restoreDebugLog();
+                    this.reload=false;
+                }
             }
         });
+
+        this.panel.onDidDispose(() => {
+            this.reload=true;
+        });
+    }
+
+    private loadState(): void
+    {
+
+    }
+    private storeState(): void
+    {
+
     }
 
     private sendStoredLogs()
@@ -78,30 +101,23 @@ export class AiderWebview
         });
     }
 
-    public updateChatHistory(text: string): void
-    {
-        this.panel.webview.postMessage({
-            command: 'updateChatHistory',
-            text: text
-        });
-    }
-
     public restoreChatHistory(): void
     {
         // Get chat history from AiderInterface and replay it
         const history=this.aiderInterface.getChatHistory();
         history.forEach(msg =>
         {
-            if(msg.type==='output')
+            if(msg.type==='user')
             {
-                this.updateChatHistory(msg.message);
-            } else if(msg.type==='assistant')
+                this.addMessageUser(msg.message);
+            }
+            else if(msg.type==='output')
             {
-                this.updateChatHistoryAssistant({
-                    message: msg.message//,
-                    //                    fileName: msg.fileName||'',
-                    //                    diff: msg.diff||''
-                });
+                this.addMessageOutput(msg.message);
+            }
+            else if(msg.type==='assistant')
+            {
+                this.addMessageAssistant(msg.message);
             }
             // Skip prompts that were already answered
         });
@@ -142,6 +158,30 @@ export class AiderWebview
         });
     }
 
+    public addMessageUser(text: string): void
+    {
+        this.panel.webview.postMessage({
+            command: 'addMessageUser',
+            text: text
+        });
+    }
+
+    public addMessageOutput(text: string): void
+    {
+        this.panel.webview.postMessage({
+            command: 'addMessageOutput',
+            text: text
+        });
+    }
+
+    public addMessageAssistant(message: string): void
+    {
+        this.panel.webview.postMessage({
+            command: 'addAssistantMessage',
+            text: message
+        });
+    }
+
     public updateStreamMessage(message: string, final: boolean): void
     {
         const htmlMessage=this.markdownIt.render(message);
@@ -150,18 +190,6 @@ export class AiderWebview
             command: 'updateStreamMessage',
             html: htmlMessage,
             final: final
-        });
-    }
-
-    //    public updateChatHistoryAssistant(info: {message: string; fileName: string; diff: string}): void
-    public updateChatHistoryAssistant(info: {message: string}): void
-    {
-        this.panel.webview.postMessage({
-            command: 'addAssistantMessage',
-            //            html: htmlMessage
-            text: info.message//,
-            //            fileName: info.fileName,
-            //            diff: info.diff
         });
     }
 
