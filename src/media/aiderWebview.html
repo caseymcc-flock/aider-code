@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Aider Webview</title>
     <link rel="stylesheet" type="text/css" href="${cssUri}">
-    <script src="${highlightUri}"></script> <!-- Include highlight.js -->
+    <script src="${markdownItUri}"></script>
 </head>
 <body class="vscode-body">
     <div id="app">
@@ -14,9 +14,6 @@
                 <div class="logo"></div>
                 <h1>Aider</h1>
                 <button id="debug-toggle" class="debug-icon codicon codicon-bug">🐛</button>
-            </div>
-            <div class="message vscode-input">
-                <p>Welcome to Aider. I'm here to help you with your coding tasks. You can start by asking a question or giving me a task.</p>
             </div>
             <div id="chat-history"></div>
             <div class="input-container">
