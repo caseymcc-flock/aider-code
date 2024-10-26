@@ -39,8 +39,9 @@ body, html {
 .version-text {
     color: var(--vscode-descriptionForeground);
     font-size: 12px;
-    margin-left: 4px;
+    margin-left: 8px;
     opacity: 0.8;
+    display: inline-block;
 }
 
 .model-info {
