@@ -23,6 +23,7 @@ export class AiderInterface
     private chatHistory: ChatMessage[]=[];
     private answeredPrompts: Set<string>=new Set();
     private streamingMessage: boolean=false;
+    private version: any;
 
     constructor(workingDirectory: string)
     {
@@ -130,12 +131,8 @@ export class AiderInterface
                 }
                 else if(parsedData.cmd==="version")
                 {
-                    if(this.webview) {
-                        this.webview.panel.webview.postMessage({
-                            command: 'version',
-                            version: parsedData.value
-                        });
-                    }
+                    this.version=parsedData.value;
+                    this.webview?.updateVersion(parsedData.value);
                 }
                 else if(parsedData.cmd==="prompt")
                 {

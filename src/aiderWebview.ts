@@ -1,4 +1,5 @@
 import * as vscode from 'vscode';
+import MarkdownIt from 'markdown-it';
 import {AiderInterface} from './aiderInterface';
 import * as fs from 'fs';
 import * as path from 'path';
@@ -9,7 +10,7 @@ export class AiderWebview
     private panel: vscode.WebviewPanel;
     private aiderInterface: AiderInterface;
     private debugLogEntries: string[]=[]; // Store debug log entries
-    private currentStreamingMessage: string = ''; // Track current streaming message
+    private markdownIt: MarkdownIt=new MarkdownIt();
 
     constructor(context: vscode.ExtensionContext, aiderInterface: AiderInterface)
     {
@@ -24,7 +25,7 @@ export class AiderWebview
             }
         );
 
-        this.panel.webview.html=this.getWebviewContent(context.extensionUri);
+        this.panel.webview.html=this.getWebviewContent(context);
 
         this.panel.webview.onDidReceiveMessage(
             message =>
@@ -98,8 +99,8 @@ export class AiderWebview
             {
                 this.updateChatHistoryAssistant({
                     message: msg.message//,
-//                    fileName: msg.fileName||'',
-//                    diff: msg.diff||''
+                    //                    fileName: msg.fileName||'',
+                    //                    diff: msg.diff||''
                 });
             }
             // Skip prompts that were already answered
@@ -117,14 +118,34 @@ export class AiderWebview
         });
     }
 
-//    public updateChatHistoryAssistant(info: {message: string; fileName: string; diff: string}): void
+    public updateVersion(version: any): void
+    {
+        this.panel.webview.postMessage({
+            command: 'version',
+            version: `${version.major}.${version.minor}.${version.patch}`
+        });
+    }
+
+    public updateStreamMessage(message: string, final: boolean): void
+    {
+        const htmlMessage=this.markdownIt.render(message);
+
+        this.panel.webview.postMessage({
+            command: 'updateStreamMessage',
+            html: htmlMessage,
+            final: final
+        });
+    }
+
+    //    public updateChatHistoryAssistant(info: {message: string; fileName: string; diff: string}): void
     public updateChatHistoryAssistant(info: {message: string}): void
     {
         this.panel.webview.postMessage({
-            command: 'updateChatHistoryAssistant',
+            command: 'addAssistantMessage',
+            //            html: htmlMessage
             text: info.message//,
-//            fileName: info.fileName,
-//            diff: info.diff
+            //            fileName: info.fileName,
+            //            diff: info.diff
         });
     }
 
@@ -169,19 +190,22 @@ export class AiderWebview
         this.aiderInterface.promptUserResponse(response);
     }
 
-    private getWebviewContent(extensionUri: vscode.Uri): string
+    private getWebviewContent(context: vscode.ExtensionContext): string
     {
-        const htmlPath=vscode.Uri.joinPath(extensionUri, 'src', 'media', 'aiderWebview.html');
-        const cssPath=vscode.Uri.joinPath(extensionUri, 'src', 'media', 'styles.css');
-        const scriptPath=vscode.Uri.joinPath(extensionUri, 'src', 'media', 'aiderWebview.js');
+        const htmlPath=vscode.Uri.joinPath(context.extensionUri, 'src', 'media', 'aiderWebview.html');
+        const cssPath=vscode.Uri.joinPath(context.extensionUri, 'src', 'media', 'styles.css');
+        const scriptPath=vscode.Uri.joinPath(context.extensionUri, 'src', 'media', 'aiderWebview.js');
+        const markdownPath=vscode.Uri.joinPath(context.extensionUri, 'node_modules', '@vscode/markdown-it', 'dist', 'index.js');
 
         const htmlUri=this.panel.webview.asWebviewUri(htmlPath);
         const cssUri=this.panel.webview.asWebviewUri(cssPath);
         const scriptUri=this.panel.webview.asWebviewUri(scriptPath);
+        const markdownUri=this.panel.webview.asWebviewUri(markdownPath);
 
         let html=fs.readFileSync(htmlPath.fsPath, 'utf8');
         html=html.replace('${cssUri}', cssUri.toString());
         html=html.replace('${scriptUri}', scriptUri.toString());
+        html=html.replace('${markdownItUri}', markdownUri.toString());
 
         return html;
     }
@@ -194,7 +218,7 @@ export class AiderWebview
         {
             this.aiderInterface.userCommand(value);
         }
-//        this.aiderInterface.sendCommand(command, value);
+        //        this.aiderInterface.sendCommand(command, value);
         //        try {
         //            const response = await this.aiderInterface.sendCommand(command);
         //            Logger.log(`Received response from Aider: ${response}`);

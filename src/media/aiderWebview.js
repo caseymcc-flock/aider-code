@@ -228,6 +228,7 @@ function updateStreamMessage(message, final, html=false)
 
 function updateVersion(version) {
     const versionText = document.getElementById('version-text');
+
     if (versionText) {
         versionText.textContent = version;
     }
