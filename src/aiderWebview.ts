@@ -9,6 +9,7 @@ export class AiderWebview
     private panel: vscode.WebviewPanel;
     private aiderInterface: AiderInterface;
     private debugLogEntries: string[]=[]; // Store debug log entries
+    private currentStreamingMessage: string = ''; // Track current streaming message
 
     constructor(context: vscode.ExtensionContext, aiderInterface: AiderInterface)
     {
