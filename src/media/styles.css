@@ -47,12 +47,45 @@ h1 {
     overflow-y: auto;
     padding-right: 10px;
 }
+.message-header {
+    display: flex;
+    align-items: center;
+    padding: 8px 16px;
+    gap: 8px;
+}
+
+.message-icon {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.user-icon {
+    background-color: var(--vscode-textLink-foreground);
+}
+
+.assistant-icon {
+    background-color: var(--vscode-terminal-ansiGreen);
+}
+
+.message-divider {
+    border: none;
+    border-top: 1px solid var(--vscode-input-border);
+    margin: 0;
+}
+
 .message, .user-message, .aider-response {
     background-color: var(--vscode-input-background);
     border: 1px solid var(--vscode-input-border);
     border-radius: 6px;
-    padding: 16px 4px;
-    margin-bottom: 4px; /* Reduced margin between messages */
+    margin-bottom: 4px;
+}
+
+.user-message, .aider-response {
+    padding: 16px;
 }
 .user-message, .aider-response {
     background-color: transparent; /* Make background transparent to match parent */

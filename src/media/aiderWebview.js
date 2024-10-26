@@ -41,15 +41,37 @@ function updateMessageBlock(type)
 
     lastMessageType = type;
     currentMessageDiv = document.createElement('div');
+    
+    // Create header
+    const header = document.createElement('div');
+    header.className = 'message-header';
+    
+    // Create icon
+    const icon = document.createElement('div');
+    icon.className = 'message-icon';
+    
     switch(type)
     {
         case 'user':
             currentMessageDiv.className = 'user-message-container';
+            icon.className += ' user-icon';
+            icon.innerHTML = '👤';
             break;
         case 'assistant':
             currentMessageDiv.className = 'assistant-message-container';
+            icon.className += ' assistant-icon';
+            icon.innerHTML = '🤖';
             break;
     }
+    
+    header.appendChild(icon);
+    currentMessageDiv.appendChild(header);
+    
+    // Add divider
+    const divider = document.createElement('hr');
+    divider.className = 'message-divider';
+    currentMessageDiv.appendChild(divider);
+    
     chatHistory.appendChild(currentMessageDiv);
 }
 
