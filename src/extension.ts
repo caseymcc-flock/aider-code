@@ -20,10 +20,13 @@ export function activate(context: vscode.ExtensionContext) {
 
 	// Register the command to launch the Aider webview
 	const webviewDisposable = vscode.commands.registerCommand('aider-code.openAiderChat', () => {
-		new AiderWebview(context, aiderInterface);
+		const webview = new AiderWebview(context, aiderInterface);
 	});
 	context.subscriptions.push(webviewDisposable);
 }
 
 // This method is called when your extension is deactivated
-export function deactivate() {}
+export function deactivate() 
+{
+	console.log('Closing Aider Interface...');
+}

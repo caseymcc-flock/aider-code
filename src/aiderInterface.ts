@@ -24,6 +24,8 @@ export class AiderInterface
     private answeredPrompts: Set<string>=new Set();
     private streamingMessage: boolean=false;
     private version: any;
+    private model: string='';
+    private model_weak: string='';
 
     constructor(workingDirectory: string)
     {
@@ -103,27 +105,11 @@ export class AiderInterface
 
                 if(parsedData.cmd==="output")
                 {
-                    Logger.log(`Output: ${parsedData.value}`);
-                    this.chatHistory.push({
-                        type: 'output',
-                        message: parsedData.value
-                    });
-                    this.updateChatHistoryOutput(parsedData.value);
+                    this.addMessageOutput(parsedData.value);
                 }
                 else if(parsedData.cmd==="assistant")
                 {
-                    Logger.log(`Assistant response:`);
-                    this.chatHistory.push({
-                        type: 'assistant',
-                        message: parsedData.value//,
-                        //                        fileName: parsedData.filename,
-                        //                        diff: parsedData.code
-                    });
-                    this.updateChatHistoryAssistant({
-                        message: parsedData.value//, 
-                        //                        fileName: parsedData.filename, 
-                        //                        diff: parsedData.code 
-                    });
+                    this.addMessageAssistant(parsedData.value);
                 } 
                 else if(parsedData.cmd==="assistant-stream")
                 {
@@ -136,10 +122,12 @@ export class AiderInterface
                 }
                 else if(parsedData.cmd==="model")
                 {
+                    this.model=parsedData.value;
                     this.webview?.updateModel(parsedData.value);
                 }
                 else if(parsedData.cmd==="weak_model")
                 {
+                    this.model_weak=parsedData.value;
                     this.webview?.updateWeakModel(parsedData.value);
                 }
                 else if(parsedData.cmd==="prompt")
@@ -187,32 +175,37 @@ export class AiderInterface
         }
     }
 
-    private updateChatHistoryOutput(message: string): void
-    {
-        if(this.webview)
-        {
-            this.webview.updateChatHistory(message);
-        }
-    }
-
-    //    private updateChatHistoryAssistant(info: { message: string; fileName: string; diff: string }): void {
-    private updateChatHistoryAssistant(info: {message: string}): void
-    {
-        if(this.webview)
-        {
-            this.webview.updateChatHistoryAssistant(info);
-        }
-    }
-
     public userCommand(message: string): void 
     {
         this.chatHistory.push({
             type: 'user',
             message: message
         });
-        this.updateChatHistoryOutput(message);
+        this.webview?.addMessageUser(message);
 
         this.sendCommand("user", message);
+    }
+
+    private addMessageOutput(message: string): void
+    {
+        Logger.log(`Output: ${message}`);
+
+        this.chatHistory.push({
+            type: 'output',
+            message: message
+        });
+        this.webview?.addMessageOutput(message);
+    }
+
+    private addMessageAssistant(message: string): void
+    {
+        Logger.log(`Assistant response:`);
+        
+        this.chatHistory.push({
+            type: 'assistant',
+            message: message
+        });
+        this.webview?.addMessageAssistant(message);
     }
 
     private parseResponse(response: string): [string, string, string]
@@ -257,8 +250,6 @@ export class AiderInterface
             }
         });
     }
-
-   
 
     public sendCommand(command: string, value: string): void
     {

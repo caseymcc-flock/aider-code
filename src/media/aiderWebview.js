@@ -41,7 +41,8 @@ function updateMessageBlock(type)
 
     lastMessageType = type;
     currentMessageDiv = document.createElement('div');
-    
+    currentMessageDiv.className = 'message-container';
+
     // Create header
     const header = document.createElement('div');
     header.className = 'message-header';
@@ -53,12 +54,12 @@ function updateMessageBlock(type)
     switch(type)
     {
         case 'user':
-            currentMessageDiv.className = 'user-message-container';
+//            currentMessageDiv.className = 'user-message-container';
             icon.className += ' user-icon';
             icon.innerHTML = '👤';
             break;
         case 'assistant':
-            currentMessageDiv.className = 'assistant-message-container';
+//            currentMessageDiv.className = 'assistant-message-container';
             icon.className += ' assistant-icon';
             icon.innerHTML = '🤖';
             break;
@@ -67,10 +68,10 @@ function updateMessageBlock(type)
     header.appendChild(icon);
     currentMessageDiv.appendChild(header);
     
-    // Add divider
-    const divider = document.createElement('hr');
-    divider.className = 'message-divider';
-    currentMessageDiv.appendChild(divider);
+//    // Add divider
+//    const divider = document.createElement('hr');
+//    divider.className = 'message-divider';
+//    currentMessageDiv.appendChild(divider);
     
     chatHistory.appendChild(currentMessageDiv);
 }
@@ -84,11 +85,11 @@ function addMessageToChat(type, message, html=false)
     switch(type)
     {
         case 'user':
-            messageElement.className = 'user-message';
+            messageElement.className = 'message-user';
             messageElement.textContent = message;
             break;
         case 'assistant':
-            messageElement.className = 'aider-response';
+            messageElement.className = 'message-assistant';
             if(html)
             {   messageElement.innerHTML = message;}
             else
@@ -289,20 +290,23 @@ window.addEventListener('message', event =>
     const message = event.data;
     switch(message.command)
     {
-        case 'updateChatHistory':
-            addMessageToChat('user', message.text);
-            break;
-        case 'addUserMessage':
-            addMessageToChat('user', message.text);
-            break;
-        case 'addResponse':
-            addMessageToChat('assistant', message.text);
-            break;
         case 'log':
             addLogEntry(message.text);
             break;
-        case 'promptUser':
-            addPromptToChat(message.text);
+        case 'version':
+            updateVersion(message.version);
+            break;
+        case 'model':
+            updateModel(message.model);
+            break;
+        case 'weakModel':
+            updateWeakModel(message.model);
+            break;
+        case 'addMessageUser':
+            addMessageToChat('user', message.text);
+            break;
+        case 'addMessageOutput':
+            addMessageToChat('assistant', message.text);
             break;
         case 'addAssistantMessage':
             //            addAssistantMessageToChat(message.text, message.fileName, message.diff, message.changeCount);
@@ -314,14 +318,11 @@ window.addEventListener('message', event =>
             else
             {   updateStreamMessage(message.html, message.final, true);}
             break;
-        case 'version':
-            updateVersion(message.version);
+        case 'promptUser':
+            addPromptToChat(message.text);
             break;
-        case 'model':
-            updateModel(message.model);
-            break;
-        case 'weakModel':
-            updateWeakModel(message.model);
+        case 'addResponse':
+            addMessageToChat('assistant', message.text);
             break;
     }
 });

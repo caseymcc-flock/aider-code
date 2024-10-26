@@ -12,6 +12,7 @@ body, html {
     height: 100%;
     display: flex;
 }
+
 .container {
     display: flex;
     flex-direction: column;
@@ -19,13 +20,13 @@ body, html {
     flex: 1;
     max-width: 800px;
     margin: 0 auto;
-    padding: 20px;
+    padding: 5px;
     box-sizing: border-box;
 }
 .header {
     display: flex;
     align-items: center;
-    margin-bottom: 20px;
+    margin-bottom: 5px;
     flex-shrink: 0;
 }
 .logo {
@@ -62,7 +63,6 @@ h1 {
     font-size: var(--vscode-font-size);
     font-weight: 600;
     margin: 0;
-    flex-grow: 1;
     color: var(--vscode-foreground);
 }
 #chat-history {
@@ -70,11 +70,19 @@ h1 {
     overflow-y: auto;
     padding-right: 10px;
 }
+
+.message-container{
+    border-top: 1px solid var(--vscode-chat-requestBorder);
+    border-bottom: 1px solid var(--vscode-chat-requestBorder);
+    padding: 5px 0px;
+}
+
+
 .message-header {
     display: flex;
     align-items: center;
-    padding: 8px 16px;
-    gap: 8px;
+    padding: 0px;
+    margin-bottom: 5px;
 }
 
 .message-icon {
@@ -100,11 +108,10 @@ h1 {
     margin: 0;
 }
 
-.message, .user-message, .aider-response {
-    background-color: var(--vscode-input-background);
-    border: 1px solid var(--vscode-input-border);
-    border-radius: 6px;
-    margin-bottom: 4px;
+.message, .message-user, .message-assistant {
+    background-color: transparent;
+    border-radius: 0px;
+    margin-bottom: 0px;
 }
 
 .user-message, .aider-response {

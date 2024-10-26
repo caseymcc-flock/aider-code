@@ -39,8 +39,6 @@ export class AiderWebview
 
         this.panel.webview.html=this.getWebviewContent(context);
         
-        
-
         // Send stored logs to the webview
         this.sendStoredLogs();
         this.restoreChatHistory();
@@ -100,11 +98,10 @@ export class AiderWebview
     {
         const panelInfo: PanelInfo = {
             viewType: this.panel.viewType,
-            column: this.panel.viewColumn
+            column: this.panel.viewColumn || vscode.ViewColumn.Two
         };
 
         context.workspaceState.update('aiderWebviewPanel', panelInfo);
-
     }
 
     private sendStoredLogs()
